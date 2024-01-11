@@ -6,7 +6,7 @@
                                                    android:layout_height = "match_parent"
                                                    android:paddingStart = "20dp"
                                                    android:paddingEnd = "20dp"
-                                                   tools:context = ".activities.view.auth.fragment.LoginFragment">
+                                                   tools:context = ".activities.view.auth.LoginActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id = "@+id/guideline"
@@ -119,7 +119,7 @@
 
     <com.google.android.gms.common.SignInButton
         android:id = "@+id/google_button"
-        android:layout_width = "match_parent"
+        android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
         android:layout_alignParentTop = "true"
         android:layout_margin = "30dp"

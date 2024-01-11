@@ -6,7 +6,7 @@
                                                    android:layout_height = "match_parent"
                                                    android:paddingStart = "20dp"
                                                    android:paddingEnd = "20dp"
-                                                   tools:context = ".activities.view.auth.fragment.RegisterFragment">
+                                                   tools:context = ".activities.view.auth.RegisterActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id = "@+id/guideline"

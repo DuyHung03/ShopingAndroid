@@ -6,8 +6,6 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -23,16 +21,19 @@ import com.example.shopping.activities.helper.KeyboardUtils
 import com.example.shopping.activities.helper.ValidationTextWatcher
 import com.example.shopping.activities.utils.Resources
 import com.example.shopping.activities.viewmodel.AuthViewModel
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.textfield.TextInputLayout
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var loginButton: Button
+    private lateinit var loginButton: CircularProgressButton
     private lateinit var googleButton: SignInButton
     private lateinit var email: TextInputLayout
     private lateinit var password: TextInputLayout
@@ -91,11 +92,11 @@ class LoginActivity : AppCompatActivity() {
                 is Resources.Failure -> {
                     val error = state.e
                     Log.d("TAG", "onCreateView: $error")
-                    progressBar.visibility = View.GONE
+                    loginButton.revertAnimation()
                 }
 
                 Resources.Loading -> {
-                    progressBar.visibility = View.VISIBLE
+                    loginButton.startAnimation()
                 }
 
                 else -> {}
@@ -112,6 +113,8 @@ class LoginActivity : AppCompatActivity() {
         closeButton = findViewById(R.id.closeButton)
         toRegisterButton = findViewById(R.id.toRegisterButton)
         googleButton = findViewById(R.id.google_button)
+        googleButton.setSize(SignInButton.SIZE_WIDE)
+        googleButton.setColorScheme(SignInButton.COLOR_LIGHT)
     }
 
     private fun initializeGoogleSignIn() {

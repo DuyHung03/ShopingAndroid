@@ -34,7 +34,7 @@ class UserFragment : Fragment() {
         loginButton.setOnClickListener {
             val intent = Intent(context, LoginActivity::class.java)
             startActivity(intent,
-                ActivityOptions.makeCustomAnimation(context, R.anim.fade_in, R.anim.fade_out)
+                ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_right, R.anim.fade_out)
                     .toBundle()
             )
         }

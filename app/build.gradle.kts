@@ -109,4 +109,8 @@ dependencies {
 
     //rounded image
     implementation("com.makeramen:roundedimageview:2.3.0")
+
+    //slide indicator
+    implementation("me.relex:circleindicator:2.1.6")
+
 }

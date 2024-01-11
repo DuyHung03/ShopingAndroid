@@ -38,7 +38,7 @@
 
             <ImageView
                 android:id = "@+id/searchButton"
-                android:layout_width = "60dp"
+                android:layout_width = "66dp"
                 android:layout_height = "60dp"
                 android:contentDescription = "@string/chat"
                 android:src = "@drawable/ic_search_foreground"
@@ -63,7 +63,6 @@
         app:layout_constraintEnd_toEndOf = "parent"
         app:layout_constraintStart_toStartOf = "parent"
         app:layout_constraintTop_toBottomOf = "@+id/toolbar">
-
 
         <include
             layout = "@layout/content_home"

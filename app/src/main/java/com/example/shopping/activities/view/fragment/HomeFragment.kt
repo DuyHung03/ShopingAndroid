@@ -28,6 +28,7 @@ import com.example.shopping.activities.view.ProductListActivity
 import com.example.shopping.activities.view.SearchActivity
 import com.example.shopping.activities.viewmodel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import me.relex.circleindicator.CircleIndicator3
 
 @SuppressLint("LogNotTimber")
 @AndroidEntryPoint
@@ -36,6 +37,7 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
     private lateinit var searchButton: ImageView
     private lateinit var progressBar: ProgressBar
     private lateinit var viewPager: ViewPager2
+    private lateinit var indicator: CircleIndicator3
     private lateinit var sliderPagerAdapter: SliderPagerAdapter
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var productAdapter: ProductAdapter
@@ -68,6 +70,7 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
         viewPager = view.findViewById(R.id.slideBanner)
         categoryRecyclerView = view.findViewById(R.id.categoryRecyclerView)
         productRecyclerView = view.findViewById(R.id.productRecyclerView)
+        indicator = view.findViewById(R.id.indicator)
     }
 
     private fun initialListener() {
@@ -92,7 +95,7 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
                     }
 
 
-                    setupViewPager()
+                    setupViewPagerSlider()
 
                 }
 
@@ -168,7 +171,7 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
         val itemClicked = imageList[position]
     }
 
-    private fun setupViewPager() {
+    private fun setupViewPagerSlider() {
         sliderPagerAdapter = SliderPagerAdapter(imageList)
         viewPager.adapter = sliderPagerAdapter
         viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -177,13 +180,17 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
         viewPager.currentItem = currentPageIndex
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {})
+
+        indicator.setViewPager(viewPager)
+
+        sliderPagerAdapter.registerAdapterDataObserver(indicator.adapterDataObserver)
     }
 
     private fun toSearchScreen() {
         val intent = Intent(context, SearchActivity::class.java)
         val options = ActivityOptions.makeCustomAnimation(
             context,
-            R.anim.slide_in_right,
+            R.anim.fade_in,
             R.anim.slide_out_left,
         )
         context?.startActivity(intent, options.toBundle())
