@@ -13,13 +13,14 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.shopping.R
 import com.example.shopping.activities.adapter.CategoryAdapter
-import com.example.shopping.activities.adapter.ProductAdapter
+import com.example.shopping.activities.adapter.ProductPagingAdapter
 import com.example.shopping.activities.adapter.SliderPagerAdapter
 import com.example.shopping.activities.entities.Category
 import com.example.shopping.activities.entities.Product
@@ -28,11 +29,13 @@ import com.example.shopping.activities.view.ProductListActivity
 import com.example.shopping.activities.view.SearchActivity
 import com.example.shopping.activities.viewmodel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import me.relex.circleindicator.CircleIndicator3
 
 @SuppressLint("LogNotTimber")
 @AndroidEntryPoint
-class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
+class HomeFragment : Fragment() {
 
     private lateinit var searchButton: ImageView
     private lateinit var progressBar: ProgressBar
@@ -40,10 +43,9 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
     private lateinit var indicator: CircleIndicator3
     private lateinit var sliderPagerAdapter: SliderPagerAdapter
     private lateinit var categoryAdapter: CategoryAdapter
-    private lateinit var productAdapter: ProductAdapter
     private lateinit var categoryRecyclerView: RecyclerView
     private lateinit var productRecyclerView: RecyclerView
-
+    private lateinit var productPagingAdapter: ProductPagingAdapter
 
     private val viewModel by viewModels<ProductViewModel>()
     private val imageList = mutableListOf<String>()
@@ -78,37 +80,19 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
             toSearchScreen()
         }
 
-        viewModel.getProductAsPage(1, 10)
-
         viewModel.getCategory()
 
-        viewModel.product.observe(viewLifecycleOwner) { res ->
-            when (res) {
-                is Resources.Success -> {
-                    val products = res.result
+        productPagingAdapter = ProductPagingAdapter { product ->
+            toProductScreen(product)
+        }
 
-                    for (product in products) {
-                        Log.d("TAG", "onCreate: ${product.title}")
-                        imageList.add(product.images[0])
-                        productList.add(product)
-                        progressBar.visibility = View.GONE
-                    }
-
-
-                    setupViewPagerSlider()
-
-                }
-
-                is Resources.Failure -> {
-                    Log.d("TAG", "onCreate: ${res.e}")
-                    progressBar.visibility = View.GONE
-                }
-
-                Resources.Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                }
+        lifecycleScope.launch {
+            viewModel.getProductsAsPage().collectLatest { product ->
+                productPagingAdapter.submitData(product)
             }
         }
+
+        setupProductAdapter()
 
         viewModel.categories.observe(viewLifecycleOwner) { res ->
             when (res) {
@@ -120,7 +104,6 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
                         categoryList.add(cat)
                     }
 
-                    setupProductAdapter()
                     showCategories()
                 }
 
@@ -133,14 +116,9 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
     }
 
     private fun setupProductAdapter() {
-        productAdapter = ProductAdapter(productList) { product ->
-            toProductScreen(product)
-        }
-
         val layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
         productRecyclerView.layoutManager = layoutManager
-        productRecyclerView.adapter = productAdapter
-
+        productRecyclerView.adapter = productPagingAdapter
     }
 
     private fun toProductScreen(product: Product) {
@@ -167,9 +145,6 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
         context?.startActivity(intent, options.toBundle())
     }
 
-    override fun onItemClick(position: Int) {
-        val itemClicked = imageList[position]
-    }
 
     private fun setupViewPagerSlider() {
         sliderPagerAdapter = SliderPagerAdapter(imageList)
@@ -195,5 +170,4 @@ class HomeFragment : Fragment(), SliderPagerAdapter.OnItemClickListener {
         )
         context?.startActivity(intent, options.toBundle())
     }
-
 }

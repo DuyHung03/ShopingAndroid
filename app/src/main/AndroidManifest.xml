@@ -29,7 +29,7 @@
         <activity
             android:name = ".activities.view.SearchActivity"
             android:exported = "true"
-            android:windowSoftInputMode = "stateAlwaysVisible" />
+            android:windowSoftInputMode = "stateVisible" />
         <activity
             android:name = ".activities.view.MainActivity"
             android:exported = "true"
