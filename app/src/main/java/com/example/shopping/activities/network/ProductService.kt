@@ -17,4 +17,9 @@ interface ProductService {
     @GET("categories")
     suspend fun getCategories(): Response<List<Category>>
 
+    @GET("products/")
+    suspend fun getProductsByTitle(
+        @Query("title") title: String?
+    ): Response<List<Product>>
+
 }

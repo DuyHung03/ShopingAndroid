@@ -28,6 +28,7 @@ import com.example.shopping.activities.utils.Resources
 import com.example.shopping.activities.view.ProductListActivity
 import com.example.shopping.activities.view.SearchActivity
 import com.example.shopping.activities.viewmodel.ProductViewModel
+import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
     private lateinit var categoryRecyclerView: RecyclerView
     private lateinit var productRecyclerView: RecyclerView
     private lateinit var productPagingAdapter: ProductPagingAdapter
-
+    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private val viewModel by viewModels<ProductViewModel>()
     private val imageList = mutableListOf<String>()
     private val categoryList = mutableListOf<Category>()
@@ -80,20 +81,17 @@ class HomeFragment : Fragment() {
             toSearchScreen()
         }
 
-        viewModel.getCategory()
-
         productPagingAdapter = ProductPagingAdapter { product ->
             toProductScreen(product)
         }
-
         lifecycleScope.launch {
             viewModel.getProductsAsPage().collectLatest { product ->
                 productPagingAdapter.submitData(product)
             }
         }
-
         setupProductAdapter()
 
+        viewModel.getCategory()
         viewModel.categories.observe(viewLifecycleOwner) { res ->
             when (res) {
                 is Resources.Success -> {
@@ -122,7 +120,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun toProductScreen(product: Product) {
-        Toast.makeText(context, product.title, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, product.title, Toast.LENGTH_SHORT).show()
     }
 
     private fun showCategories() {

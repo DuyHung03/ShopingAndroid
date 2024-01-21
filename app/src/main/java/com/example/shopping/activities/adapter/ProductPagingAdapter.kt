@@ -34,6 +34,9 @@ class ProductPagingAdapter(
         val product = getItem(position)
         if (product != null) {
             holder.setData(product.images[0], product.title, product.price.toString())
+            holder.itemView.setOnClickListener {
+                onClickProduct(product)
+            }
         }
 
     }
@@ -41,10 +44,6 @@ class ProductPagingAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.product_item, parent, false)
         return ViewHolder(view)
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
     }
 
     companion object {

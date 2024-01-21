@@ -1,26 +1,29 @@
 <resources>
-    <string name = "app_name">Shopping</string>
+    <string name="app_name">Shopping</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name = "hello_blank_fragment">Hello blank
+    <string name="hello_blank_fragment">Hello blank
         fragment
     </string>
-    <string name = "login">Login</string>
-    <string name = "web_client_id">425146237557-nfp44p8jbtg5doakqtnpsdnqumnbkl8t.apps.googleusercontent.com</string>
-    <string name = "email">Email</string>
-    <string name = "password">Password</string>
-    <string name = "register">Register</string>
-    <string name = "create_your_account">Create your account</string>
-    <string name = "confirm_password">Confirm password</string>
-    <string name = "chat">Chat</string>
-    <string name = "eshop">EShop</string>
-    <string name = "search">search</string>
-    <string name = "banner">Banner</string>
-    <string name = "cart">Cart</string>
-    <string name = "home">Home</string>
-    <string name = "me">Me</string>
-    <string name = "account">Account</string>
-    <string name = "login_register">Login / Register</string>
-    <string name = "close">close</string>
-    <string name = "categories">Categories</string>
+    <string name="login">Login</string>
+    <string name="web_client_id">425146237557-nfp44p8jbtg5doakqtnpsdnqumnbkl8t.apps.googleusercontent.com</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="chat">Chat</string>
+    <string name="eshop">EShop</string>
+    <string name="search">search</string>
+    <string name="banner">Banner</string>
+    <string name="cart">Cart</string>
+    <string name="home">Home</string>
+    <string name="me">Me</string>
+    <string name="account">Account</string>
+    <string name="login_register">Login / Register</string>
+    <string name="close">close</string>
+    <string name="categories">Categories</string>
+    <string name="search_here">Search here…</string>
+    <string name="_10">10</string>
+    <string name="step_out_in_style_with_this_sleek_navy_blue_baseball_cap_crafted_from_durable_material_it_features_a_smooth_structured_design_and_an_adjustable_strap_for_the_perfect_fit_protect_your_eyes_from_the_sun_and_complement_your_casual_looks_with_this_versatile_and_timeless_accessory">Step out in style with this sleek navy blue baseball cap. Crafted from durable material, it features a smooth, structured design and an adjustable strap for the perfect fit. Protect your eyes from the sun and complement your casual looks with this versatile and timeless accessory.</string>
 
 </resources>

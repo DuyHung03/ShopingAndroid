@@ -1,17 +1,35 @@
 package com.example.shopping.activities.view
 
-import android.content.Context
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.shopping.R
+import com.example.shopping.activities.adapter.ProductAdapter
+import com.example.shopping.activities.entities.Product
+import com.example.shopping.activities.utils.Resources
+import com.example.shopping.activities.viewmodel.ProductViewModel
+import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.Timer
+import java.util.TimerTask
 
+@AndroidEntryPoint
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var backButton: ImageView
-    private lateinit var searchView: SearchView
+    private lateinit var searchView: TextInputEditText
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var productAdapter: ProductAdapter
+    private var productList = mutableListOf<Product>()
+    private lateinit var progressBar: ProgressBar
+    val viewModel by viewModels<ProductViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,23 +41,72 @@ class SearchActivity : AppCompatActivity() {
 
     private fun initialView() {
         backButton = findViewById(R.id.backButton)
-        searchView = findViewById(R.id.searchView)
+        searchView = findViewById(R.id.edtSearch)
+        recyclerView = findViewById(R.id.recyclerView)
+        progressBar = findViewById(R.id.progressBar)
     }
 
     private fun initialListener() {
+
         backButton.setOnClickListener {
             this.finish()
         }
 
-        searchView.setOnQueryTextFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                searchView.isIconified = false
-                searchView.requestFocus()
-                val imm: InputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT)
+        searchView.addTextChangedListener(object : TextWatcher {
+
+            private val timer = Timer()
+            private val DELAY: Long = 500 // 0.5s
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                timer.cancel()
+                timer.schedule(object : TimerTask() {
+                    override fun run() {
+                        if (s != null) {
+                            //cal api
+                            viewModel.getProductsByTitle(s.toString().trim())
+                        } else {
+                            return
+                        }
+                    }
+                }, DELAY)
+            }
+        })
+
+        viewModel.products.observe(this) {
+            when (it) {
+                is Resources.Failure -> {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(this, it.e.toString(), Toast.LENGTH_SHORT).show()
+                }
+
+                Resources.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+
+                is Resources.Success -> {
+                    val products = it.result
+                    productList.clear()
+                    for (product in products) {
+                        productList.add(product)
+                    }
+                    progressBar.visibility = View.GONE
+                    showProducts()
+                }
             }
         }
 
+    }
+
+    private fun showProducts() {
+        productAdapter = ProductAdapter(productList) { product ->
+            toProductScreen(product)
+        }
+    }
+
+    private fun toProductScreen(product: Product) {
+        Toast.makeText(this, product.title, Toast.LENGTH_SHORT).show()
     }
 }

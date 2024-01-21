@@ -1,5 +1,6 @@
 package com.example.shopping.activities.viewmodel
 
+import android.icu.text.CaseMap.Title
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,6 +24,9 @@ class ProductViewModel @Inject constructor(
     private val _categories = MutableLiveData<Resources<List<Category>>>()
     val categories: LiveData<Resources<List<Category>>> get() = _categories
 
+    private val _products = MutableLiveData<Resources<List<Product>>>()
+    val products: LiveData<Resources<List<Product>>> get() = _products
+
 
     fun getProductsAsPage(): Flow<PagingData<Product>> {
         return productRepository.getProductsAsPage().cachedIn(viewModelScope)
@@ -34,5 +38,9 @@ class ProductViewModel @Inject constructor(
         _categories.value = result
     }
 
-
+    fun getProductsByTitle(title: String) = viewModelScope.launch {
+        _products.value = Resources.Loading
+        val result = productRepository.getProductByTitle(title)
+        _products.value = result
+    }
 }

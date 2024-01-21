@@ -3,6 +3,7 @@ package com.example.shopping.activities.di
 import com.example.shopping.activities.network.ProductService
 import com.example.shopping.activities.repository.ProductRepository
 import com.example.shopping.activities.repository.ProductRepositoryImp
+import com.example.shopping.activities.utils.Constant.Companion.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -23,7 +24,7 @@ class NetworkModule {
 
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.escuelajs.co/api/v1/")
+        .baseUrl(BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .client(
             OkHttpClient.Builder()

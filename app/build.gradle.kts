@@ -116,4 +116,6 @@ dependencies {
     //paging3
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
 
+    //shimmer skeleton
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
 }
