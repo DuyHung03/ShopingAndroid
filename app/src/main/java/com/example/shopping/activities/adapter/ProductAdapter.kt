@@ -23,7 +23,7 @@ class ProductAdapter(
 
         fun setData(imageUrl: String, name: String, price: String) {
             GlideImageLoader(itemView.context).load(
-                imageUrl, image, R.drawable.background, R.drawable.background
+                imageUrl, image, R.drawable.spinner_loading, R.drawable.background
             )
             this.name.text = name
             this.price.text = price

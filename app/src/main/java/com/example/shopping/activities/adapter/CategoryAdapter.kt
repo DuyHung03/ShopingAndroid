@@ -23,7 +23,7 @@ class CategoryAdapter(
 
         fun setData(imageUrl: String, title: String) {
             GlideImageLoader(itemView.context).load(
-                imageUrl, image, R.drawable.background, R.drawable.background
+                imageUrl, image, R.drawable.spinner_loading, R.drawable.background
             )
             text.text = title
         }

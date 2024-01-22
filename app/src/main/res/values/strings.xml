@@ -25,5 +25,7 @@
     <string name="search_here">Search here…</string>
     <string name="_10">10</string>
     <string name="step_out_in_style_with_this_sleek_navy_blue_baseball_cap_crafted_from_durable_material_it_features_a_smooth_structured_design_and_an_adjustable_strap_for_the_perfect_fit_protect_your_eyes_from_the_sun_and_complement_your_casual_looks_with_this_versatile_and_timeless_accessory">Step out in style with this sleek navy blue baseball cap. Crafted from durable material, it features a smooth, structured design and an adjustable strap for the perfect fit. Protect your eyes from the sun and complement your casual looks with this versatile and timeless accessory.</string>
-
+    <string name="pay_now">Pay now</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="price">$%1$s</string>
 </resources>

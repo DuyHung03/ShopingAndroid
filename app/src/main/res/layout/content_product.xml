@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
@@ -18,7 +18,7 @@
 
     <me.relex.circleindicator.CircleIndicator3
         android:id="@+id/indicator"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toTopOf="@+id/view"
@@ -63,8 +63,8 @@
 
     <ImageView
         android:id="@+id/likeButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/close"
@@ -72,16 +72,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
-    <TextView
+    <kr.co.prnd.readmore.ReadMoreTextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:layout_marginTop="16dp"
         android:text="@string/step_out_in_style_with_this_sleek_navy_blue_baseball_cap_crafted_from_durable_material_it_features_a_smooth_structured_design_and_an_adjustable_strap_for_the_perfect_fit_protect_your_eyes_from_the_sun_and_complement_your_casual_looks_with_this_versatile_and_timeless_accessory"
+        android:textColor="@color/g_gray700"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/price" />
+        app:layout_constraintTop_toBottomOf="@+id/price"
+        app:readMoreColor="@color/primary"
+        app:readMoreMaxLine="3"
+        app:readMoreText="…Show more" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

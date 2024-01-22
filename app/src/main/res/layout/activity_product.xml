@@ -82,6 +82,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
+
         <include layout="@layout/content_product" />
 
     </ScrollView>
@@ -89,22 +90,45 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
+        android:padding="4dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addToCartButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:text="@string/cart" />
+            android:background="@drawable/round_button"
+            android:text="@string/add_to_cart"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/primary"
+            app:icon="@drawable/add_to_cart"
+            app:iconGravity="textStart"
+            app:iconSize="25dp"
+            app:iconTint="@color/white"
+            tools:ignore="TouchTargetSizeCheck" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/payButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
             android:layout_weight="1"
-            android:text="@string/cart" />
+            android:background="@drawable/round_button"
+            android:text="@string/pay_now"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/g_red"
+            app:icon="@drawable/pay"
+            app:iconGravity="textStart"
+            app:iconSize="25dp"
+            app:iconTint="@color/white"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
 

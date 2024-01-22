@@ -1,8 +1,11 @@
 package com.example.shopping.activities.view
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -66,6 +69,7 @@ class SearchActivity : AppCompatActivity() {
                     override fun run() {
                         if (s != null) {
                             //cal api
+                            Log.d("TAG", "run: ${s.toString().trim()}")
                             viewModel.getProductsByTitle(s.toString().trim())
                         } else {
                             return
@@ -107,6 +111,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun toProductScreen(product: Product) {
-        Toast.makeText(this, product.title, Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, ProductActivity::class.java)
+        intent.putExtra("product", product)
+        val options = ActivityOptions.makeCustomAnimation(
+            this,
+            R.anim.slide_in_right,
+            R.anim.slide_out_left,
+        )
+        this.startActivity(intent, options.toBundle())
     }
 }

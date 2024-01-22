@@ -3,7 +3,6 @@ package com.example.shopping.activities.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -13,24 +12,13 @@ import com.example.shopping.activities.helper.GlideImageLoader
 class SliderPagerAdapter(private val imageList: List<String>) :
     RecyclerView.Adapter<SliderPagerAdapter.ViewHolder>() {
 
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-    }
-
-    var onItemClickListener: OnItemClickListener? = null
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val image: ImageView = itemView.findViewById(R.id.imageView)
 
-        init {
-            itemView.setOnClickListener {
-                onItemClickListener?.onItemClick(adapterPosition)
-            }
-        }
 
         fun setImage(imageUrl: String) {
             GlideImageLoader(itemView.context).load(
-                imageUrl, image, R.drawable.background, R.drawable.background
+                imageUrl, image, R.drawable.spinner_loading, R.drawable.background
             )
         }
     }

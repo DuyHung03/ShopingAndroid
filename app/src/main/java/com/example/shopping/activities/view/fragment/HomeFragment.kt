@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +24,7 @@ import com.example.shopping.activities.adapter.SliderPagerAdapter
 import com.example.shopping.activities.entities.Category
 import com.example.shopping.activities.entities.Product
 import com.example.shopping.activities.utils.Resources
+import com.example.shopping.activities.view.ProductActivity
 import com.example.shopping.activities.view.ProductListActivity
 import com.example.shopping.activities.view.SearchActivity
 import com.example.shopping.activities.viewmodel.ProductViewModel
@@ -49,7 +49,11 @@ class HomeFragment : Fragment() {
     private lateinit var productPagingAdapter: ProductPagingAdapter
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private val viewModel by viewModels<ProductViewModel>()
-    private val imageList = mutableListOf<String>()
+    private val imageList = mutableListOf(
+        "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    )
     private val categoryList = mutableListOf<Category>()
     private val productList = mutableListOf<Product>()
 
@@ -77,6 +81,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun initialListener() {
+
+        setupViewPagerSlider()
+
         searchButton.setOnClickListener {
             toSearchScreen()
         }
@@ -120,7 +127,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun toProductScreen(product: Product) {
-        Toast.makeText(context, product.title, Toast.LENGTH_SHORT).show()
+        val intent = Intent(context, ProductActivity::class.java)
+        intent.putExtra("product", product)
+        val options = ActivityOptions.makeCustomAnimation(
+            context,
+            R.anim.slide_in_right,
+            R.anim.slide_out_left,
+        )
+        context?.startActivity(intent, options.toBundle())
     }
 
     private fun showCategories() {
@@ -163,7 +177,7 @@ class HomeFragment : Fragment() {
         val intent = Intent(context, SearchActivity::class.java)
         val options = ActivityOptions.makeCustomAnimation(
             context,
-            R.anim.fade_in,
+            R.anim.slide_in_right,
             R.anim.slide_out_left,
         )
         context?.startActivity(intent, options.toBundle())

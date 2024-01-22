@@ -1,5 +1,9 @@
 package com.example.shopping.activities.entities
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Product(
     val category: Category,
     val creationAt: String, // 2024-01-07T22:28:40.000Z
@@ -9,4 +13,4 @@ data class Product(
     val price: Int, // 353
     val title: String, // Ergonomic Steel Pizza
     val updatedAt: String // 2024-01-07T22:28:40.000Z
-)
+) : Parcelable
