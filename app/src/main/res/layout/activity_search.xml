@@ -66,9 +66,48 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolBar" />
+
+    <!--    <include-->
+    <!--        android:id="@+id/emptyLayout"-->
+    <!--        layout="@layout/empty"-->
+    <!--        android:visibility="visible"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/toolBar" />-->
+
+    <LinearLayout
+        android:id="@+id/emptyLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolBar"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/eshop"
+            android:src="@drawable/empty" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/empty_product"
+            android:textColor="@color/g_gray700"
+            android:textSize="20sp"
+            android:textStyle="italic" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"

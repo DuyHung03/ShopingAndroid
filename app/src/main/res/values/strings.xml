@@ -28,4 +28,11 @@
     <string name="pay_now">Pay now</string>
     <string name="add_to_cart">Add to cart</string>
     <string name="price">$%1$s</string>
+    <string name="empty_product">Empty product!!!</string>
+    <string name="orders">Orders</string>
+    <string name="favourites_list">Favourites list</string>
+    <string name="other">Other</string>
+    <string name="account_setting">Account Setting</string>
+    <string name="feedback">Feedback</string>
+    <string name="display_name">Display Name</string>
 </resources>

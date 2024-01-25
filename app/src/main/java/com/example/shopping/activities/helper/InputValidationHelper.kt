@@ -23,4 +23,17 @@ class InputValidationHelper {
             .check()
     }
 
+    fun isMatchPassword(
+        password: String,
+        confirmPassword: String,
+        callback: (String) -> Unit
+    ): Boolean {
+        return if (confirmPassword == password) {
+            true
+        } else {
+            callback("Password doesn't match!")
+            false
+        }
+    }
+
 }

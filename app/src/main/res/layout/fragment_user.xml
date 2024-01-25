@@ -1,60 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android = "http://schemas.android.com/apk/res/android"
-                                                   xmlns:app = "http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools = "http://schemas.android.com/tools"
-                                                   android:layout_width = "match_parent"
-                                                   android:layout_height = "match_parent"
-                                                   tools:context = ".activities.view.fragment.UserFragment">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.view.fragment.UserFragment">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id = "@+id/guideline4"
-        android:layout_width = "wrap_content"
-        android:layout_height = "wrap_content"
-        android:orientation = "horizontal"
-        app:layout_constraintGuide_percent = "0.15" />
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width = "match_parent"
-        android:layout_height = "0dp"
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:background="@drawable/background"
-        app:layout_constraintBottom_toTopOf = "@+id/guideline4"
-        app:layout_constraintEnd_toEndOf = "parent"
-        app:layout_constraintStart_toStartOf = "parent"
-        app:layout_constraintTop_toTopOf = "parent">
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id = "@+id/circleImageView"
-            android:layout_width = "80dp"
-            android:layout_height = "80dp"
-            android:layout_marginStart = "16dp"
-            android:src = "@drawable/user"
-            app:layout_constraintBottom_toBottomOf = "parent"
-            app:layout_constraintStart_toStartOf = "parent"
-            app:layout_constraintTop_toTopOf = "parent" />
+            android:id="@+id/circleImageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/user"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/displayName"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:layout_marginStart = "16dp"
-            android:maxWidth = "200dp"
-            android:textSize = "16sp"
-            app:layout_constraintBottom_toBottomOf = "@+id/circleImageView"
-            app:layout_constraintStart_toEndOf = "@+id/circleImageView"
-            app:layout_constraintTop_toTopOf = "@+id/circleImageView" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:maxWidth="200dp"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
+            app:layout_constraintStart_toEndOf="@+id/circleImageView"
+            app:layout_constraintTop_toTopOf="@+id/circleImageView" />
 
         <com.google.android.material.button.MaterialButton
-            android:id = "@+id/loginButton"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:layout_marginStart = "16dp"
-            android:backgroundTint = "@color/g_dark_blue"
-            android:text = "@string/login_register"
-            app:layout_constraintBottom_toBottomOf = "@+id/circleImageView"
-            app:layout_constraintStart_toEndOf = "@+id/circleImageView"
-            app:layout_constraintTop_toTopOf = "@+id/circleImageView" />
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="@color/g_dark_blue"
+            android:text="@string/login_register"
+            app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
+            app:layout_constraintStart_toEndOf="@+id/circleImageView"
+            app:layout_constraintTop_toTopOf="@+id/circleImageView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline4">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_stroke"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/orders"
+                android:src="@drawable/order" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                android:text="@string/orders"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_stroke"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/favourites_list"
+                android:src="@drawable/heart_red" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                android:text="@string/favourites_list"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_stroke"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/chat"
+                android:src="@drawable/chat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                android:text="@string/chat"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="4dp"
+            android:text="@string/other"
+            android:textColor="@color/g_dark_blue"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_stroke"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/chat"
+                android:src="@drawable/setting" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                android:text="@string/account_setting"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_stroke"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/chat"
+                android:src="@drawable/note" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                android:text="@string/feedback"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/acme"
+        android:gravity="center"
+        android:text="@string/eshop"
+        android:textColor="@color/primary"
+        android:textSize="30sp"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

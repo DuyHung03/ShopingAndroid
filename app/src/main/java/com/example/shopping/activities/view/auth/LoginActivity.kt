@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
                             .show()
                         Log.d(
                             "TAG",
-                            "onCreateView: $idToken ${credential.password} ${credential.displayName}${credential.profilePictureUri}"
+                            "onCreateView: $idToken ${credential.password} ${credential.displayName}${credential.profilePictureUri} ${credential.publicKeyCredential}"
                         )
 
                     } else {
@@ -79,29 +79,9 @@ class LoginActivity : AppCompatActivity() {
 
         initializeViews()
         initializeGoogleSignIn()
-        setupListeners()
+        initialListeners()
 
-        viewModel.stateFlow.asLiveData().observe(this) { state ->
-            when (state) {
-                is Resources.Success -> {
-                    val user = state.result
-                    Log.d("TAG", "onCreateView: $user")
-                    viewModel.currentUser = user
-                }
 
-                is Resources.Failure -> {
-                    val error = state.e
-                    Log.d("TAG", "onCreateView: $error")
-                    loginButton.revertAnimation()
-                }
-
-                Resources.Loading -> {
-                    loginButton.startAnimation()
-                }
-
-                else -> {}
-            }
-        }
 
     }
 
@@ -112,6 +92,7 @@ class LoginActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         closeButton = findViewById(R.id.closeButton)
         toRegisterButton = findViewById(R.id.toRegisterButton)
+
         googleButton = findViewById(R.id.google_button)
         googleButton.setSize(SignInButton.SIZE_WIDE)
         googleButton.setColorScheme(SignInButton.COLOR_LIGHT)
@@ -136,20 +117,43 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    @SuppressLint("LogNotTimber")
-    private fun setupListeners() {
+    private fun initialListeners() {
+        //input layout watcher
         val validationTextWatcher = ValidationTextWatcher(listOf(email, password))
         email.editText?.addTextChangedListener(validationTextWatcher)
         password.editText?.addTextChangedListener(validationTextWatcher)
 
+        //hide keyboard when un focus
         keyboardUtils.clearFocus(listOf(email.editText, password.editText))
 
         loginButton.setOnClickListener {
             val emailText = email.editText?.text.toString().trim()
             val passwordText = password.editText?.text.toString().trim()
 
-            Log.d("TAG", "handleLoginEmail: $emailText")
-            handleLoginEmail(emailText, passwordText)
+            if (inputValidation())
+                viewModel.loginWithEmail(emailText, passwordText)
+        }
+
+        viewModel.loginFlow.asLiveData().observe(this) { state ->
+            when (state) {
+                is Resources.Success -> {
+                    val user = state.result
+                    Log.d("TAG", "onCreateView: ${user.displayName}")
+                    viewModel.currentUser = user
+                }
+
+                is Resources.Failure -> {
+                    val error = state.e
+                    Log.d("TAG", "onCreateView: $error")
+                    loginButton.revertAnimation()
+                }
+
+                is Resources.Loading -> {
+                    loginButton.startAnimation()
+                }
+
+                else -> {}
+            }
         }
 
         closeButton.setOnClickListener {
@@ -171,10 +175,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun handleLoginEmail(email: String, password: String) {
-        viewModel.loginWithEmail(email, password)
-    }
-
     private fun initiateGoogleSignIn() {
         oneTapClient.beginSignIn(signUpRequest).addOnSuccessListener { result ->
             val intentSenderRequest =
@@ -190,6 +190,7 @@ class LoginActivity : AppCompatActivity() {
         val emailText = email.editText?.text.toString().trim()
         val passwordText = password.editText?.text.toString().trim()
 
+        Log.d("TAG", "handleLoginEmail: $emailText")
         return (inputValidator.isValidEmail(emailText) { error ->
             email.error = error
         } && inputValidator.isValidPassword(passwordText) { error ->

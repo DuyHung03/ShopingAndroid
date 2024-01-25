@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shopping.R
 import com.example.shopping.activities.entities.Product
@@ -38,7 +39,6 @@ class ProductPagingAdapter(
                 onClickProduct(product)
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -57,5 +57,10 @@ class ProductPagingAdapter(
             }
 
         }
+    }
+
+    fun setGridLayout(recyclerView: RecyclerView) {
+        val layoutManager = GridLayoutManager(recyclerView.context, 2)
+        recyclerView.layoutManager = layoutManager
     }
 }

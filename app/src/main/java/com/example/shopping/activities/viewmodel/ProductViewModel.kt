@@ -1,6 +1,5 @@
 package com.example.shopping.activities.viewmodel
 
-import android.icu.text.CaseMap.Title
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,4 +42,11 @@ class ProductViewModel @Inject constructor(
         val result = productRepository.getProductByTitle(title)
         _products.value = result
     }
+
+    fun getProductByCategory(id: Int) = viewModelScope.launch {
+        _products.value = Resources.Loading
+        val result = productRepository.getProductsByCategory(id)
+        _products.value = result
+    }
+
 }

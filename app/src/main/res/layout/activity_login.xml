@@ -71,6 +71,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id = "@+id/passwordInputLayout"
         android:layout_width = "match_parent"
+        app:boxStrokeColor="@color/primary"
         android:layout_height = "wrap_content"
         android:layout_marginTop = "20dp"
         app:endIconMode = "password_toggle"

@@ -10,6 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.ScrollView
+import androidx.core.view.ViewCompat
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +37,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.relex.circleindicator.CircleIndicator3
 
+
 @SuppressLint("LogNotTimber")
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -47,6 +51,7 @@ class HomeFragment : Fragment() {
     private lateinit var categoryRecyclerView: RecyclerView
     private lateinit var productRecyclerView: RecyclerView
     private lateinit var productPagingAdapter: ProductPagingAdapter
+    private lateinit var scrollView: NestedScrollView
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private val viewModel by viewModels<ProductViewModel>()
     private val imageList = mutableListOf(
@@ -65,8 +70,8 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        initialView(view)
-        initialListener()
+//        initialView(view)
+//        initialListener()
 
         return view
     }
@@ -74,6 +79,7 @@ class HomeFragment : Fragment() {
     private fun initialView(view: View) {
         searchButton = view.findViewById(R.id.searchButton)
         progressBar = view.findViewById(R.id.progressBar)
+        scrollView = view.findViewById(R.id.scrollView)
         viewPager = view.findViewById(R.id.slideBanner)
         categoryRecyclerView = view.findViewById(R.id.categoryRecyclerView)
         productRecyclerView = view.findViewById(R.id.productRecyclerView)
@@ -81,6 +87,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun initialListener() {
+        ViewCompat.setNestedScrollingEnabled(productRecyclerView, false)
+
 
         setupViewPagerSlider()
 
@@ -91,12 +99,7 @@ class HomeFragment : Fragment() {
         productPagingAdapter = ProductPagingAdapter { product ->
             toProductScreen(product)
         }
-        lifecycleScope.launch {
-            viewModel.getProductsAsPage().collectLatest { product ->
-                productPagingAdapter.submitData(product)
-            }
-        }
-        setupProductAdapter()
+
 
         viewModel.getCategory()
         viewModel.categories.observe(viewLifecycleOwner) { res ->
@@ -104,10 +107,7 @@ class HomeFragment : Fragment() {
                 is Resources.Success -> {
                     val category = res.result
                     categoryList.clear()
-                    for (cat in category) {
-                        Log.d("TAG", "onCreate: ${cat.name}")
-                        categoryList.add(cat)
-                    }
+                    categoryList.addAll(category)
 
                     showCategories()
                 }
@@ -117,7 +117,20 @@ class HomeFragment : Fragment() {
                 is Resources.Loading -> {}
             }
         }
-
+        lifecycleScope.launch {
+            viewModel.getProductsAsPage().collectLatest { product ->
+                productPagingAdapter.submitData(product)
+            }
+        }
+//        scrollView.viewTreeObserver.addOnScrollChangedListener {
+//            val view = scrollView.getChildAt(scrollView.childCount - 1)
+//            Log.d("TAG", "${scrollView.childCount}")
+//            val diff: Int = view.bottom - (scrollView.height + scrollView
+//                .scrollY)
+//            if (diff == 0) {
+//            }
+//        }
+        setupProductAdapter()
     }
 
     private fun setupProductAdapter() {
@@ -139,7 +152,7 @@ class HomeFragment : Fragment() {
 
     private fun showCategories() {
         categoryAdapter = CategoryAdapter(categoryList) { category ->
-            toProductListScreen(category)
+            toSearchScreen(category)
         }
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         categoryRecyclerView.layoutManager = layoutManager
@@ -148,7 +161,6 @@ class HomeFragment : Fragment() {
 
     private fun toProductListScreen(category: Category) {
         val intent = Intent(context, ProductListActivity::class.java)
-        intent.putExtra("category", category)
         val options = ActivityOptions.makeCustomAnimation(
             context,
             R.anim.slide_in_right,
@@ -156,7 +168,6 @@ class HomeFragment : Fragment() {
         )
         context?.startActivity(intent, options.toBundle())
     }
-
 
     private fun setupViewPagerSlider() {
         sliderPagerAdapter = SliderPagerAdapter(imageList)
@@ -173,8 +184,9 @@ class HomeFragment : Fragment() {
         sliderPagerAdapter.registerAdapterDataObserver(indicator.adapterDataObserver)
     }
 
-    private fun toSearchScreen() {
+    private fun toSearchScreen(category: Category? = null) {
         val intent = Intent(context, SearchActivity::class.java)
+        intent.putExtra("category", category)
         val options = ActivityOptions.makeCustomAnimation(
             context,
             R.anim.slide_in_right,
