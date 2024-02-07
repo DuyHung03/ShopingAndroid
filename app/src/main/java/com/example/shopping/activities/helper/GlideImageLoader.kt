@@ -6,7 +6,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
-class GlideImageLoader(private val context: Context) {
+class GlideImageLoader(private val context: Context?) {
     @SuppressLint("CheckResult")
     fun load(
         imgUrl: String?,
@@ -19,7 +19,7 @@ class GlideImageLoader(private val context: Context) {
             return
         }
 
-        val glideRequest = Glide.with(context)
+        val glideRequest = Glide.with(context!!)
             .load(imgUrl)
             .override(200, 200)
             .placeholder(placeholder)

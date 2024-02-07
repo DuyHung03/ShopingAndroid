@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageView"
+            android:id="@+id/avatar"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="16dp"
@@ -39,10 +39,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:maxWidth="200dp"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
-            app:layout_constraintStart_toEndOf="@+id/circleImageView"
-            app:layout_constraintTop_toTopOf="@+id/circleImageView" />
+            android:text="@string/favourites_list"
+            android:textColor="#474B7B"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/avatar"
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toTopOf="@+id/avatar" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
@@ -51,9 +55,9 @@
             android:layout_marginStart="16dp"
             android:backgroundTint="@color/g_dark_blue"
             android:text="@string/login_register"
-            app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
-            app:layout_constraintStart_toEndOf="@+id/circleImageView"
-            app:layout_constraintTop_toTopOf="@+id/circleImageView" />
+            app:layout_constraintBottom_toBottomOf="@+id/avatar"
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toTopOf="@+id/avatar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -190,6 +194,31 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="12dp"
                 android:text="@string/feedback"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/logOutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_stroke"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/chat"
+                android:src="@drawable/logout" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                android:text="@string/log_out"
+                android:textColor="#FF6666"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>

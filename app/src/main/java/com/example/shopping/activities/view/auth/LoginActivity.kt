@@ -10,17 +10,21 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.asLiveData
 import com.example.shopping.R
+import com.example.shopping.activities.entities.User
 import com.example.shopping.activities.helper.InputValidationHelper
 import com.example.shopping.activities.helper.KeyboardUtils
 import com.example.shopping.activities.helper.ValidationTextWatcher
 import com.example.shopping.activities.utils.Resources
+import com.example.shopping.activities.view.activities.MainActivity
 import com.example.shopping.activities.viewmodel.AuthViewModel
+import com.example.shopping.activities.viewmodel.DataViewModel
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
@@ -28,8 +32,10 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 
+@SuppressLint("LogNotTimber")
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
@@ -44,33 +50,11 @@ class LoginActivity : AppCompatActivity() {
     private val keyboardUtils = KeyboardUtils()
     private lateinit var oneTapClient: SignInClient
     private lateinit var signUpRequest: BeginSignInRequest
+    private lateinit var resultLauncher: ActivityResultLauncher<IntentSenderRequest>
 
-    @SuppressLint("LogNotTimber")
-    private val resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                Log.d("TAG", "Got ID token.")
-                try {
-                    val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
-                    val idToken = credential.googleIdToken
-                    if (idToken != null) {
-                        Toast.makeText(this, credential.id, Toast.LENGTH_LONG)
-                            .show()
-                        Log.d(
-                            "TAG",
-                            "onCreateView: $idToken ${credential.password} ${credential.displayName}${credential.profilePictureUri} ${credential.publicKeyCredential}"
-                        )
-
-                    } else {
-                        Log.d("TAG", "No ID token!")
-                    }
-                } catch (e: ApiException) {
-                    Log.d("TAG", e.toString())
-                }
-            }
-        }
 
     private val viewModel by viewModels<AuthViewModel>()
+    private val dataViewModel by viewModels<DataViewModel>()
 
     @SuppressLint("LogNotTimber")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +65,24 @@ class LoginActivity : AppCompatActivity() {
         initializeGoogleSignIn()
         initialListeners()
 
-
+        resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    Log.d("TAG", "Got ID token.")
+                    try {
+                        val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
+                        val idToken = credential.googleIdToken
+                        if (idToken != null) {
+                            val authCredential = GoogleAuthProvider.getCredential(idToken, null)
+                            viewModel.loginWithGoogle(authCredential)
+                        } else {
+                            Log.d("TAG", "No ID token!")
+                        }
+                    } catch (e: ApiException) {
+                        Log.d("TAG", e.toString())
+                    }
+                }
+            }
 
     }
 
@@ -134,17 +135,37 @@ class LoginActivity : AppCompatActivity() {
                 viewModel.loginWithEmail(emailText, passwordText)
         }
 
+        //observe the login flow to get user
         viewModel.loginFlow.asLiveData().observe(this) { state ->
             when (state) {
                 is Resources.Success -> {
                     val user = state.result
-                    Log.d("TAG", "onCreateView: ${user.displayName}")
+
+                    //check is user exists then write to database
+                    if (user.providerData[1].providerId == "google.com") {
+                        dataViewModel.checkIsUserExisted(user.uid) {
+                            if (it) {
+                                val newUser = User(
+                                    user.uid,
+                                    user.email,
+                                    user.displayName,
+                                    password = null,
+                                    user.photoUrl.toString(),
+                                    user.providerData[1].providerId
+                                )
+                                dataViewModel.saveUserToDb(newUser)
+                            }
+                        }
+                    }
+
                     viewModel.currentUser = user
+                    redirectHomeScreen()
                 }
 
                 is Resources.Failure -> {
                     val error = state.e
                     Log.d("TAG", "onCreateView: $error")
+                    Toast.makeText(this, error.message, Toast.LENGTH_LONG).show()
                     loginButton.revertAnimation()
                 }
 
@@ -170,12 +191,22 @@ class LoginActivity : AppCompatActivity() {
         }
 
         googleButton.setOnClickListener {
-            initiateGoogleSignIn()
+            googleSignIn()
         }
 
     }
 
-    private fun initiateGoogleSignIn() {
+    private fun redirectHomeScreen() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(
+            intent,
+            ActivityOptions.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out)
+                .toBundle()
+        )
+        this.finish()
+    }
+
+    private fun googleSignIn() {
         oneTapClient.beginSignIn(signUpRequest).addOnSuccessListener { result ->
             val intentSenderRequest =
                 IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()

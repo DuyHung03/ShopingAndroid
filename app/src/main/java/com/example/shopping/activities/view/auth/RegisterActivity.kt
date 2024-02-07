@@ -1,21 +1,29 @@
 package com.example.shopping.activities.view.auth
 
+import android.annotation.SuppressLint
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.asLiveData
 import com.example.shopping.R
+import com.example.shopping.activities.entities.User
 import com.example.shopping.activities.helper.InputValidationHelper
 import com.example.shopping.activities.helper.ValidationTextWatcher
 import com.example.shopping.activities.utils.Resources
+import com.example.shopping.activities.view.activities.MainActivity
 import com.example.shopping.activities.viewmodel.AuthViewModel
+import com.example.shopping.activities.viewmodel.DataViewModel
 import com.example.shopping.databinding.ActivityRegisterBinding
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
+@SuppressLint("LogNotTimber")
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -27,7 +35,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var registerButton: CircularProgressButton
     private val inputValidator = InputValidationHelper()
     private val viewModel by viewModels<AuthViewModel>()
-
+    private val dataViewModel by viewModels<DataViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -70,12 +78,24 @@ class RegisterActivity : AppCompatActivity() {
         viewModel.registerFlow.asLiveData().observe(this) { state ->
             when (state) {
                 is Resources.Success -> {
-
+                    val user = state.result
+                    viewModel.currentUser = user
+                    val newUser = User(
+                        user.uid,
+                        user.email,
+                        user.displayName,
+                        password.editText!!.text.toString(),
+                        user.photoUrl.toString(),
+                        user.providerData[1].providerId
+                    )
+                    dataViewModel.saveUserToDb(newUser)
+                    redirectHomeScreen()
                 }
 
                 is Resources.Failure -> {
                     val error = state.e
                     Log.d("TAG", "onCreateView: $error")
+                    Toast.makeText(this, error.message, Toast.LENGTH_LONG).show()
                     registerButton.revertAnimation()
                 }
 
@@ -87,6 +107,16 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun redirectHomeScreen() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(
+            intent,
+            ActivityOptions.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out)
+                .toBundle()
+        )
+        this.finish()
     }
 
     private fun inputValidation(): Boolean {

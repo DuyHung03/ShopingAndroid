@@ -1,0 +1,19 @@
+package com.example.shopping.activities.di
+
+import com.example.shopping.activities.repository.DataRepository
+import com.example.shopping.activities.repository.DataRepositoryImp
+import com.google.firebase.firestore.FirebaseFirestore
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+
+@Module
+@InstallIn(SingletonComponent::class)
+class StorageModule {
+    @Provides
+    fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    fun provideDataRepository(impl: DataRepositoryImp): DataRepository = impl
+}

@@ -24,10 +24,10 @@ class ProductPagingAdapter(
 
         fun setData(imageUrl: String, name: String, price: String) {
             GlideImageLoader(itemView.context).load(
-                imageUrl, image, R.drawable.spinner_loading, R.drawable.background
+                imageUrl, image, R.drawable.spinner_loading, R.drawable.image_placeholder
             )
             this.productName.text = name
-            this.price.text = price
+            this.price.text = "$$price"
         }
     }
 

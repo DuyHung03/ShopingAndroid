@@ -99,6 +99,8 @@
         android:layout_marginTop = "20dp"
         android:text = "@string/login"
         android:textSize = "20sp"
+        app:spinning_bar_padding="4dp"
+        app:spinning_bar_color="#CF0606"
         app:layout_constraintEnd_toEndOf = "parent"
         app:layout_constraintStart_toStartOf = "parent"
         app:layout_constraintTop_toBottomOf = "@+id/passwordInputLayout" />

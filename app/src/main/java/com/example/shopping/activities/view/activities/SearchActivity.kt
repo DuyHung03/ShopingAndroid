@@ -1,4 +1,4 @@
-package com.example.shopping.activities.view
+package com.example.shopping.activities.view.activities
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -59,8 +59,10 @@ class SearchActivity : AppCompatActivity() {
 
         if (intent != null) {
             val category = intent.getParcelableExtra<Category>("category")
-            if (category != null)
+            if (category != null) {
+                searchView.setText(category.name)
                 viewModel.getProductByCategory(category.id)
+            }
         }
 
         backButton.setOnClickListener {
@@ -117,7 +119,9 @@ class SearchActivity : AppCompatActivity() {
     private fun showProducts() {
         if (productList.isEmpty()) {
             binding.emptyLayout.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
         } else {
+            recyclerView.visibility = View.VISIBLE
             binding.emptyLayout.visibility = View.GONE
             productAdapter = ProductAdapter(productList) { product ->
                 toProductScreen(product)

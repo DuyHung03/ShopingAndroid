@@ -1,4 +1,4 @@
-package com.example.shopping.activities.view
+package com.example.shopping.activities.view.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle

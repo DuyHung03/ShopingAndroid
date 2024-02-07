@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopping.activities.repository.AuthRepository
 import com.example.shopping.activities.utils.Resources
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,12 @@ class AuthViewModel @Inject constructor(
 
     private val _registerFlow = MutableStateFlow<Resources<FirebaseUser>?>(null)
     val registerFlow: StateFlow<Resources<FirebaseUser>?> = _registerFlow
+
+    fun loginWithGoogle(token: AuthCredential) = viewModelScope.launch {
+        _loginFlow.value = Resources.Loading
+        val result = authRepository.googleLogin(token)
+        _loginFlow.value = result
+    }
 
     fun loginWithEmail(email: String, password: String) = viewModelScope.launch {
         _loginFlow.value = Resources.Loading
