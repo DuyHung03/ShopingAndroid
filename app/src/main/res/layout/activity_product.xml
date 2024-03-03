@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,7 +30,7 @@
                 android:layout_height="45dp"
                 android:contentDescription="@string/search"
                 android:src="@drawable/ic_left_arrow_foreground"
-                app:tint="@color/white" />
+                app:tint="@color/black" />
 
             <TextView
                 android:layout_width="0dp"
@@ -39,8 +39,8 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/acme"
                 android:gravity="center"
-                android:text="@string/eshop"
-                android:textColor="@color/white"
+                android:text="@string/my_shoes"
+                android:textColor="@color/black"
                 android:textSize="30sp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,9 +58,10 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/white" />
+                    app:tint="@color/black" />
 
                 <TextView
+                    android:id="@+id/badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
@@ -68,7 +69,8 @@
                     android:background="@drawable/badge"
                     android:padding="5dp"
                     android:textColor="@color/white"
-                    android:visibility="invisible"
+                    android:text="@string/_0"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="@+id/cart"
                     app:layout_constraintTop_toTopOf="@+id/cart" />
 
@@ -131,6 +133,19 @@
             tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="165dp"
+        android:indeterminateTint="@color/primary"
+        android:background="#99969899"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

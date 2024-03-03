@@ -1,14 +1,16 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary"
+        android:background="@color/white"
+        android:elevation="4dp"
         app:layout_insetEdge="top">
 
         <LinearLayout
@@ -25,8 +27,8 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/acme"
                 android:gravity="center"
-                android:text="@string/eshop"
-                android:textColor="@color/white"
+                android:text="@string/my_shoes"
+                android:textColor="@color/black"
                 android:textSize="30sp" />
 
             <ImageView
@@ -35,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/chat"
                 android:src="@drawable/ic_search_foreground"
-                app:tint="@color/white" />
+                app:tint="@color/black" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +55,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/white" />
+                    app:tint="@color/black" />
 
                 <TextView
                     android:id="@+id/badge"
@@ -63,6 +65,7 @@
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/badge"
                     android:padding="5dp"
+                    android:text="@string/_0"
                     android:textColor="@color/white"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="@+id/cart"
@@ -72,42 +75,21 @@
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_dodgeInsetEdges="top">
+        android:fillViewport="true">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/slideBanner"
+        <include
+            layout="@layout/content_home"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:background="@color/white"
-            app:layout_dodgeInsetEdges="bottom" />
+            android:layout_height="0dp" />
+    </androidx.core.widget.NestedScrollView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/categoryRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:scrollbars="none"
-            app:layout_anchor="@id/slideBanner"
-            app:layout_anchorGravity="bottom"
-            app:layout_dodgeInsetEdges="bottom" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/productRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/white"
-            android:paddingStart="12dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="12dp"
-            app:layout_anchor="@id/categoryRecyclerView"
-            app:layout_anchorGravity="bottom"
-            app:layout_dodgeInsetEdges="bottom" />
-
-    </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

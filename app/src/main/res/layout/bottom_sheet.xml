@@ -68,7 +68,7 @@
         android:background="@drawable/round_button"
         android:text="@string/add_to_cart"
         android:textColor="@color/white"
-        app:backgroundTint="@color/primary"
+        app:backgroundTint="@color/red"
         app:icon="@drawable/add_to_cart"
         app:iconGravity="textStart"
         app:iconSize="25dp"

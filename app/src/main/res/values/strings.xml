@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Shopping</string>
+    <string name="app_name">My Shoes</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank
         fragment
@@ -12,7 +12,7 @@
     <string name="create_your_account">Create your account</string>
     <string name="confirm_password">Confirm password</string>
     <string name="chat">Chat</string>
-    <string name="eshop">EShop</string>
+    <string name="my_shoes">My Shoes</string>
     <string name="search">search</string>
     <string name="banner">Banner</string>
     <string name="cart">Cart</string>
@@ -28,6 +28,7 @@
     <string name="pay_now">Pay now</string>
     <string name="add_to_cart">Add to cart</string>
     <string name="price">$%1$s</string>
+    <string name="total_title">Total (%1$s)</string>
     <string name="empty_product">Empty product!!!</string>
     <string name="orders">Orders</string>
     <string name="favourites_list">Favourites list</string>
@@ -41,4 +42,13 @@
     <string name="total">Total:</string>
     <string name="all">All</string>
     <string name="_0">0</string>
+    <string name="address">Address:</string>
+    <string name="order">Order</string>
+    <string name="details">Details:</string>
+    <string name="total_cost_s_products">Total cost\'s products:</string>
+    <string name="shipping_cost">Shipping cost:</string>
+    <string name="promotion">Promotion:</string>
+    <string name="products">Products:</string>
+    <string name="choose_delivery_adress">Choose delivery adress</string>
+    <string name="add_new_address">Add new address</string>
 </resources>

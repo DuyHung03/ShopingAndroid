@@ -4,14 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import com.example.shopping.activities.entities.CartItem
 import com.example.shopping.activities.entities.Category
 import com.example.shopping.activities.entities.Product
 import com.example.shopping.activities.repository.ProductRepository
 import com.example.shopping.activities.utils.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,9 +25,12 @@ class ProductViewModel @Inject constructor(
     val products: LiveData<Resources<List<Product>>> get() = _products
 
 
-    fun getProductsAsPage(): Flow<PagingData<Product>> {
-        return productRepository.getProductsAsPage().cachedIn(viewModelScope)
+    fun getProductAsPage(offset: Int, limit: Int) = viewModelScope.launch {
+        _products.value = Resources.Loading
+        val result = productRepository.getProductsAsPage(offset, limit)
+        _products.value = result
     }
+
 
     fun getCategory() = viewModelScope.launch {
         _categories.value = Resources.Loading
@@ -47,6 +48,10 @@ class ProductViewModel @Inject constructor(
         _products.value = Resources.Loading
         val result = productRepository.getProductsByCategory(id)
         _products.value = result
+    }
+
+    fun handleCheckedProducts(products: List<CartItem>) = viewModelScope.launch {
+
     }
 
 }

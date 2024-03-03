@@ -121,4 +121,7 @@ dependencies {
 
     //read more
     implementation("kr.co.prnd:readmore-textview:1.0.0")
+
+    //swipe down to reload
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
 }

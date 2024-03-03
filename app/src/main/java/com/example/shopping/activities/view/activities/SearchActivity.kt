@@ -128,6 +128,7 @@ class SearchActivity : AppCompatActivity() {
             }
             val layoutManager = GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false)
             recyclerView.layoutManager = layoutManager
+            productAdapter.setData(productList)
             recyclerView.adapter = productAdapter
         }
     }

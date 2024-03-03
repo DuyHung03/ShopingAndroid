@@ -20,7 +20,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:contentDescription="@string/eshop"
+        android:contentDescription="@string/my_shoes"
         android:src="@drawable/ic_left_arrow_foreground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

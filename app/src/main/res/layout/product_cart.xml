@@ -9,7 +9,7 @@
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/image" />
@@ -58,5 +58,24 @@
         android:layout_marginTop="12dp"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toBottomOf="@+id/price" />
+
+    <ImageView
+        android:id="@+id/deleteButton"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="#E48787" />
+
+    <ProgressBar
+        android:id="@+id/product_progress_bar"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:indeterminateTint="@color/primary"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/deleteButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:contentDescription="@string/eshop"
+        android:contentDescription="@string/my_shoes"
         android:src="@drawable/empty_box" />
 
     <TextView

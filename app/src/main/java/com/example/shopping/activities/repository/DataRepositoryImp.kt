@@ -2,10 +2,12 @@ package com.example.shopping.activities.repository
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.example.shopping.activities.entities.Address
 import com.example.shopping.activities.entities.Cart
 import com.example.shopping.activities.entities.CartItem
 import com.example.shopping.activities.entities.User
 import com.example.shopping.activities.utils.Resources
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.toObject
@@ -14,22 +16,19 @@ import javax.inject.Inject
 
 @SuppressLint("LogNotTimber")
 class DataRepositoryImp @Inject constructor(
-    private val db: FirebaseFirestore,
+    private val db: FirebaseFirestore, private val authRepository: AuthRepository
 ) : DataRepository {
     private val cartDocument = db.collection("cart")
 
     override suspend fun saveUserToDb(newUser: User) {
         try {
-            db.collection("user")
-                .document(newUser.userId)
-                .set(newUser)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        Log.d("TAG", "saveUserToDb: Add ${newUser.email} to db successfully")
-                    } else {
-                        Log.d("TAG", "Error")
-                    }
+            db.collection("user").document(newUser.userId).set(newUser).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Log.d("TAG", "saveUserToDb: Add ${newUser.email} to db successfully")
+                } else {
+                    Log.d("TAG", "Error")
                 }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -37,16 +36,12 @@ class DataRepositoryImp @Inject constructor(
 
     override suspend fun checkIsUserExisted(userId: String, callback: (Boolean) -> Unit) {
         try {
-            db.collection("user")
-                .document(userId)
-                .get()
-                .addOnSuccessListener { document ->
-                    callback(document != null)
-                }
-                .addOnFailureListener { exception ->
-                    Log.d("TAG", "get failed with ", exception)
-                    callback(false)
-                }
+            db.collection("user").document(userId).get().addOnSuccessListener { document ->
+                callback(document != null)
+            }.addOnFailureListener { exception ->
+                Log.d("TAG", "get failed with ", exception)
+                callback(false)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             callback(false)
@@ -117,6 +112,118 @@ class DataRepositoryImp @Inject constructor(
             Resources.Failure(Exception(e.message))
         } catch (e: Exception) {
             Resources.Failure(Exception(e.message))
+        }
+    }
+
+    override suspend fun increaseQuantity(cartItem: CartItem): Resources<String> {
+        return try {
+            val cartDocumentRef = authRepository.currentUser?.let { cartDocument.document(it.uid) }
+            val cartSnapshot = cartDocumentRef!!.get().await()
+
+            if (cartSnapshot.exists()) {
+                val cartData = cartSnapshot.toObject(Cart::class.java)
+                val existingItem = cartData?.cartItem?.get(cartItem.productId)
+
+                if (existingItem != null) {
+                    val updatedQuantity = existingItem.quantity + 1
+                    cartDocumentRef.update(
+                        "cartItem.${existingItem.productId}.quantity", updatedQuantity
+                    ).await()
+                    Resources.Success("Quantity increased successfully")
+                } else {
+                    Resources.Failure(Exception("Item not found in the cart"))
+                }
+            } else {
+                Resources.Failure(Exception("Cart document does not exist"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resources.Failure(e)
+        }
+    }
+
+    override suspend fun decreaseQuantity(cartItem: CartItem): Resources<String> {
+        return try {
+            val cartDocumentRef = authRepository.currentUser?.let { cartDocument.document(it.uid) }
+            val cartSnapshot = cartDocumentRef!!.get().await()
+
+            if (cartSnapshot.exists()) {
+                val cartData = cartSnapshot.toObject(Cart::class.java)
+                val existingItem = cartData?.cartItem?.get(cartItem.productId)
+
+                if (existingItem != null) {
+                    val updatedQuantity = existingItem.quantity - 1
+                    cartDocumentRef.update(
+                        "cartItem.${existingItem.productId}.quantity", updatedQuantity
+                    ).await()
+                    Resources.Success("Quantity increased successfully")
+                } else {
+                    Resources.Failure(Exception("Item not found in the cart"))
+                }
+            } else {
+                Resources.Failure(Exception("Cart document does not exist"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resources.Failure(e)
+        }
+    }
+
+    override suspend fun deleteProductInCart(cartItem: CartItem): Resources<List<CartItem>> {
+        return try {
+            val currentUser = authRepository.currentUser
+            if (currentUser != null) {
+                val cartDocumentRef = cartDocument.document(currentUser.uid)
+                val cartSnapshot = cartDocumentRef.get().await()
+
+                if (cartSnapshot.exists()) {
+                    val cartData = cartSnapshot.toObject(Cart::class.java)
+                    val existingItem = cartData?.cartItem?.get(cartItem.productId)
+
+                    // Check if the product exists in the cart
+                    if (existingItem != null) {
+                        val updates = hashMapOf<String, Any>(
+                            "cartItem.${cartItem.productId}" to FieldValue.delete()
+                        )
+
+                        // Update the cart data in db
+                        cartDocumentRef.update(updates).await()
+
+                        // Return the updated cart items after successful deletion
+                        val updatedCartItems = cartData.cartItem.values.toList()
+                        Resources.Success(updatedCartItems)
+                    } else {
+                        // Product not found in the cart
+                        Resources.Failure(Exception("Product not found in the cart"))
+                    }
+                } else {
+                    // Cart document does not exist
+                    Resources.Failure(Exception("Cart document does not exist"))
+                }
+            } else {
+                // Current user is null
+                Resources.Failure(Exception("Current user is null"))
+            }
+        } catch (e: Exception) {
+            // Handle any exceptions
+            Resources.Failure(e)
+        }
+    }
+
+    override suspend fun getDeliveryAddress(userId: String): Resources<List<Address>> {
+        return try {
+            val addressDoc = db.collection("address").document(userId)
+            val snapshot = addressDoc.get().await()
+            if (snapshot.exists()) {
+                val addressList = mutableListOf<Address>()
+                val data = snapshot.toObject<Address>()
+                data?.let { addressList.add(it) }
+                return Resources.Success(addressList)
+            } else {
+                Resources.Failure(Exception("Address not found"))
+            }
+        } catch (e: Exception) {
+            Resources.Failure(Exception("Error fetching address: ${e.message}"))
         }
     }
 

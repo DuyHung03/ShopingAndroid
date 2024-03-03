@@ -1,10 +1,13 @@
 package com.example.shopping.activities.view.activities
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -27,12 +30,15 @@ import me.relex.circleindicator.CircleIndicator3
 @AndroidEntryPoint
 @SuppressLint("LogNotTimber")
 class ProductActivity : AppCompatActivity() {
+    private lateinit var progressBar: ProgressBar
     private lateinit var viewPager: ViewPager2
     private lateinit var indicator: CircleIndicator3
     private lateinit var title: TextView
     private lateinit var price: TextView
     private lateinit var likeButton: ImageView
+    private lateinit var cart: ImageView
     private lateinit var description: TextView
+    private lateinit var badge: TextView
     private lateinit var addToCartButton: MaterialButton
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var sliderPagerAdapter: SliderPagerAdapter
@@ -54,6 +60,19 @@ class ProductActivity : AppCompatActivity() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        dataViewModel.getProductsInCart(authViewModel.currentUser!!.uid)
+        dataViewModel.cartQuantity.observe(this) { state ->
+            if (state > 0) {
+                badge.text = state.toString()
+                badge.visibility = android.view.View.VISIBLE
+            } else
+                badge.visibility = android.view.View.GONE
+        }
+    }
+
+
     private fun initialView() {
         viewPager = findViewById(R.id.viewPager)
         indicator = findViewById(R.id.indicator)
@@ -63,7 +82,10 @@ class ProductActivity : AppCompatActivity() {
         likeButton = findViewById(R.id.likeButton)
         description = findViewById(R.id.description)
         backButton = findViewById(R.id.backButton)
+        progressBar = findViewById(R.id.progressBar)
         addToCartButton = findViewById(R.id.addToCartButton)
+        badge = findViewById(R.id.badge)
+        cart = findViewById(R.id.cart)
     }
 
     private fun initialListener() {
@@ -77,18 +99,31 @@ class ProductActivity : AppCompatActivity() {
             showAddToCartBottomSheet()
         }
 
+        cart.setOnClickListener {
+            toCartScreen()
+        }
+
+
+
         dataViewModel.addToCartFlow.asLiveData().observe(this) { state ->
             when (state) {
                 is Resources.Failure -> {
                     val error = state.e
                     Log.d("TAG", "onCreateView: $error")
+                    progressBar.visibility = View.GONE
+                    bottomSheetDialog.hide()
                     Toast.makeText(this, error.message, Toast.LENGTH_LONG).show()
                 }
 
-                Resources.Loading -> {}
+                Resources.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+
                 is Resources.Success -> {
                     val successMessage = state.result
                     Log.d("TAG", "onCreateView: $successMessage")
+                    progressBar.visibility = View.GONE
+                    bottomSheetDialog.hide()
                     Toast.makeText(this, successMessage, Toast.LENGTH_LONG).show()
                 }
 
@@ -102,6 +137,7 @@ class ProductActivity : AppCompatActivity() {
         val dialogView = layoutInflater.inflate(R.layout.bottom_sheet, null)
         bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialog.setContentView(dialogView)
+        bottomSheetDialog.setCancelable(true)
 
         setContentToSheet(dialogView)
 
@@ -118,6 +154,11 @@ class ProductActivity : AppCompatActivity() {
             val increaseButton = dialogView.findViewById<ImageView>(R.id.increaseButton)
             val decreaseButton = dialogView.findViewById<ImageView>(R.id.decreaseButton)
             val addToCartButton = dialogView.findViewById<MaterialButton>(R.id.addToCartButton)
+            val close: ImageView = dialogView.findViewById(R.id.closeButton)
+
+            close.setOnClickListener {
+                bottomSheetDialog.hide()
+            }
 
             //set image
             glideImageLoader.load(
@@ -157,15 +198,24 @@ class ProductActivity : AppCompatActivity() {
         }
     }
 
+    private fun toCartScreen() {
+        val intent = Intent(this, CartActivity::class.java)
+        val options = ActivityOptions.makeCustomAnimation(
+            this,
+            R.anim.slide_in_right,
+            R.anim.slide_out_left,
+        )
+        this.startActivity(intent, options.toBundle())
+    }
+
     private fun setContent(product: Product?) {
         if (product != null) {
             title.text = product.title
             price.text = getString(R.string.price, product.price.toString())
             description.text = product.description
 
-            for (image in product.images) {
-                imageList.add(image)
-            }
+            imageList.addAll(product.images)
+
 
             setImagesViewPager(imageList)
         }
