@@ -1,6 +1,9 @@
 package com.example.shopping.activities.view.activities
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,26 +37,47 @@ class AddressListActivity : AppCompatActivity() {
             this.finish()
         }
 
-        dataViewModel.getDeliveryAddress(authViewModel.currentUser!!.uid)
+        binding.addNewAddress.setOnClickListener {
+            toAddNewAddressScreen()
+        }
 
+        dataViewModel.getDeliveryAddress(authViewModel.currentUser!!.uid)
         dataViewModel.addressFlow.observe(this) { state ->
             when (state) {
                 is Resources.Failure -> {
                     toast(state.e.message.toString())
+                    binding.progressBar.visibility = View.GONE
                 }
 
                 Resources.Loading -> {
-
+                    binding.progressBar.visibility = View.VISIBLE
                 }
 
                 is Resources.Success -> {
                     val res = state.result
+                    addressList.clear()
                     addressList.addAll(res)
+                    binding.progressBar.visibility = View.GONE
                 }
             }
+            setupRecyclerView()
         }
-        setupRecyclerView()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        dataViewModel.getDeliveryAddress(authViewModel.currentUser!!.uid)
+
+    }
+
+    private fun toAddNewAddressScreen() {
+        val intent = Intent(this, AddNewAddressActivity::class.java)
+        val options = ActivityOptions.makeCustomAnimation(
+            this,
+            R.anim.slide_in_right,
+            R.anim.slide_out_left,
+        )
+        this.startActivity(intent, options.toBundle())
     }
 
     private fun setupRecyclerView() {

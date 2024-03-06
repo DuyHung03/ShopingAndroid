@@ -5,6 +5,8 @@ import android.util.Log
 import com.example.shopping.activities.entities.Address
 import com.example.shopping.activities.entities.Cart
 import com.example.shopping.activities.entities.CartItem
+import com.example.shopping.activities.entities.Order
+import com.example.shopping.activities.entities.OrderList
 import com.example.shopping.activities.entities.User
 import com.example.shopping.activities.utils.Resources
 import com.google.firebase.firestore.FieldValue
@@ -223,8 +225,43 @@ class DataRepositoryImp @Inject constructor(
                 Resources.Failure(Exception("Address not found"))
             }
         } catch (e: Exception) {
+            Log.d("TAG", "getDeliveryAddress: ${e.message}")
             Resources.Failure(Exception("Error fetching address: ${e.message}"))
         }
     }
+
+    override suspend fun saveAddress(address: Address, userId: String): Resources<String> {
+        val addressDoc = db.collection("address").document(userId)
+        return try {
+            addressDoc.set(address).await()
+            Resources.Success("Add address success!")
+        } catch (e: Exception) {
+            Resources.Failure(e)
+        }
+    }
+
+    override suspend fun saveOrder(order: Order, userId: String): Resources<String> {
+        val orderDoc = db.collection("order").document(userId)
+        return try {
+            // Get the existing OrderList document
+            val existingOrderListSnapshot = orderDoc.get().await()
+            val existingOrderList = existingOrderListSnapshot.toObject(OrderList::class.java)
+
+            // Create a new OrderList or update the existing one with the new order
+            val newOrderList =
+                existingOrderList?.copy(orderList = existingOrderList.orderList + (order.orderId to order))
+                    ?: OrderList(mutableMapOf(order.orderId to order))
+
+            // Set the new OrderList document
+            orderDoc.set(newOrderList).await()
+
+            Resources.Success("Added to cart successfully")
+        } catch (e: FirebaseFirestoreException) {
+            Resources.Failure(Exception(e.message))
+        } catch (e: Exception) {
+            Resources.Failure(Exception(e.message))
+        }
+    }
+
 
 }

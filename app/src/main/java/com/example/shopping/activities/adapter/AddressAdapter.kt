@@ -26,7 +26,6 @@ class AddressAdapter(private val itemList: List<Address>) :
 
     override fun getItemCount(): Int {
         return itemList.size
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

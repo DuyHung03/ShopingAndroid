@@ -2,6 +2,7 @@ package com.example.shopping.activities.utils
 
 class Constant {
     companion object {
-        const val BASE_URL = "https://api.escuelajs.co/api/v1/"
+        const val PRODUCT_BASE_URL = "https://api.escuelajs.co/api/v1/"
+        const val CITY_BASE_URL = "https://vapi.vnappmob.com/api/"
     }
 }

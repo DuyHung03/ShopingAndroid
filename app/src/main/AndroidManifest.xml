@@ -21,8 +21,14 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="31">
         <activity
-            android:name=".activities.view.activities.AddNewAddressActivity"
+            android:name=".activities.view.activities.ResultOrderActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.view.activities.OrderTrackingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.view.activities.AddNewAddressActivity"
+            android:exported="true" />
         <activity
             android:name=".activities.view.activities.AddressListActivity"
             android:exported="false" />

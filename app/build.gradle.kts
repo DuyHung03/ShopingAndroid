@@ -124,4 +124,7 @@ dependencies {
 
     //swipe down to reload
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
+    //spinner
+    implementation("com.jaredrummler:material-spinner:1.3.1")
 }

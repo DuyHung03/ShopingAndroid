@@ -49,6 +49,19 @@
     <string name="shipping_cost">Shipping cost:</string>
     <string name="promotion">Promotion:</string>
     <string name="products">Products:</string>
-    <string name="choose_delivery_adress">Choose delivery adress</string>
-    <string name="add_new_address">Add new address</string>
+    <string name="choose_delivery_address">Choose delivery address</string>
+    <string name="add_new_address">Edit your address</string>
+    <string name="select_city">Select city</string>
+    <string name="select_district">Select district</string>
+    <string name="select_ward">Select ward</string>
+    <string name="name">Name</string>
+    <string name="house_number">House Number</string>
+    <string name="save">Save</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="your_orders">Your Orders</string>
+    <string name="you_have_placed_your_order_successfully">You have placed your order successfully!</string>
+    <string name="thank_you_for_your_purchase">Thank you for your purchase</string>
+    <string name="we_will_confirm_your_order_and_deliver_it_to_you_as_soon_as_possible">We will confirm your order and deliver it to you as soon as possible</string>
+    <string name="your_order_id_is">Your order id is:</string>
+    <string name="to_your_orders">To your orders</string>
 </resources>

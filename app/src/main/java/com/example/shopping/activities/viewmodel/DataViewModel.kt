@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopping.activities.entities.Address
 import com.example.shopping.activities.entities.CartItem
+import com.example.shopping.activities.entities.Order
 import com.example.shopping.activities.entities.User
 import com.example.shopping.activities.repository.DataRepository
 import com.example.shopping.activities.utils.Resources
@@ -31,6 +32,12 @@ class DataViewModel @Inject constructor(
 
     private val _cartQuantity = MutableLiveData(0)
     val cartQuantity: LiveData<Int> = _cartQuantity
+
+    private val _saveAddressFlow = MutableLiveData<Resources<String>>()
+    val saveAddressFlow: LiveData<Resources<String>> = _saveAddressFlow
+
+    private val _saveOrderFlow = MutableLiveData<Resources<String>>()
+    val saveOrderFlow: LiveData<Resources<String>> = _saveOrderFlow
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -82,8 +89,7 @@ class DataViewModel @Inject constructor(
 
             is Resources.Failure -> _errorMessage.value = result.e.message
 
-            else -> {
-            }
+            else -> {}
         }
     }
 
@@ -91,6 +97,18 @@ class DataViewModel @Inject constructor(
         _addressFlow.value = Resources.Loading
         val result = dataRepository.getDeliveryAddress(userId)
         _addressFlow.value = result
+    }
+
+    fun saveAddress(address: Address, userId: String) = viewModelScope.launch {
+        _saveAddressFlow.value = Resources.Loading
+        val res = dataRepository.saveAddress(address, userId)
+        _saveAddressFlow.value = res
+    }
+
+    fun saveOrder(order: Order, userId: String) = viewModelScope.launch {
+        _saveOrderFlow.value = Resources.Loading
+        val res = dataRepository.saveOrder(order, userId)
+        _saveOrderFlow.value = res
     }
 
 }

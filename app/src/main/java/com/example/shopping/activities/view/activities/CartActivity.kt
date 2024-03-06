@@ -95,8 +95,12 @@ class CartActivity : AppCompatActivity(), ProductInCartAdapter.OnItemClickListen
                 getString(R.string.price, updatedTotalPrice.toString()) // Update UI
         }
 
-        binding.payButton.setOnClickListener{
-            toPayScreen(checkedList)
+        binding.payButton.setOnClickListener {
+            if (checkedList.isEmpty()) {
+                toast("Please choose your product")
+            } else {
+                toPayScreen(checkedList)
+            }
         }
 
     }

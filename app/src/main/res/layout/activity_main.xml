@@ -33,6 +33,7 @@
         android:layout_height = "wrap_content"
         app:itemIconSize = "50dp"
         app:labelVisibilityMode = "selected"
+        app:elevation="0dp"
         app:layout_constraintBottom_toBottomOf = "parent"
         app:layout_constraintEnd_toEndOf = "parent"
         app:layout_constraintStart_toStartOf = "parent"
