@@ -21,6 +21,9 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="31">
         <activity
+            android:name=".activities.view.activities.OrderDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.view.activities.ResultOrderActivity"
             android:exported="false" />
         <activity

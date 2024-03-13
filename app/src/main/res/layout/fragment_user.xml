@@ -72,6 +72,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline4">
 
         <LinearLayout
+            android:id="@+id/order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_stroke"
@@ -83,7 +84,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:contentDescription="@string/orders"
-                android:src="@drawable/ic_cart_foreground" />
+                android:src="@drawable/cart" />
 
             <TextView
                 android:layout_width="wrap_content"

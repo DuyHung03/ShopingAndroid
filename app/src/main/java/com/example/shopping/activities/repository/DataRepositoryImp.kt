@@ -263,5 +263,22 @@ class DataRepositoryImp @Inject constructor(
         }
     }
 
+    override suspend fun getOrders(userId: String): Resources<OrderList> {
+        val orderDoc = db.collection("order").document(userId)
+        return try {
+            val orderListSnapshot = orderDoc.get().await()
+            val orderList = orderListSnapshot.toObject(OrderList::class.java)
+
+            if (orderList != null) {
+                Resources.Success(orderList)
+            } else {
+                Resources.Failure(Exception("Order list not found"))
+            }
+        } catch (e: FirebaseFirestoreException) {
+            Resources.Failure(Exception(e.message))
+        } catch (e: Exception) {
+            Resources.Failure(Exception(e.message))
+        }
+    }
 
 }

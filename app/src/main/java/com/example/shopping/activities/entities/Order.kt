@@ -19,7 +19,7 @@ data class Order(
     val productList: ArrayList<CartItem>,
     val cost: Cost,
     val createdTime: Date,
-    val isConfirm: Boolean
+    val confirmed: Boolean
 ) : Parcelable {
     constructor() : this("", Address(), ArrayList(), Cost(), Date(), false)
 }

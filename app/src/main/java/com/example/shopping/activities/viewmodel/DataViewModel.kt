@@ -24,6 +24,7 @@ class DataViewModel @Inject constructor(
     private val _addToCartFlow = MutableStateFlow<Resources<String>?>(null)
     val addToCartFlow: StateFlow<Resources<String>?> = _addToCartFlow
 
+
     private val _productsCartFlow = MutableLiveData<List<CartItem>?>()
     val productsCartFlow: LiveData<List<CartItem>?> = _productsCartFlow
 
@@ -110,5 +111,38 @@ class DataViewModel @Inject constructor(
         val res = dataRepository.saveOrder(order, userId)
         _saveOrderFlow.value = res
     }
+
+//    private val _getOrdersFlow = MutableLiveData<Resources<OrderList>>()
+//    val getOrdersFlow: LiveData<Resources<OrderList>> = _getOrdersFlow
+
+
+    // Define waitingList and confirmedList
+    private val _waitingList = MutableLiveData<List<Order>>()
+    val waitingList: LiveData<List<Order>> = _waitingList
+
+    private val _confirmedList = MutableLiveData<List<Order>>()
+    val confirmedList: LiveData<List<Order>> = _confirmedList
+
+    fun getOrders(userId: String) = viewModelScope.launch {
+        when (val res = dataRepository.getOrders(userId)) {
+            is Resources.Success -> {
+                val waitingList = mutableListOf<Order>()
+                val confirmedList = mutableListOf<Order>()
+                for (order in res.result.orderList.values) {
+                    if (order.confirmed) {
+                        confirmedList.add(order)
+                    } else {
+                        waitingList.add(order)
+                    }
+                }
+                // Update LiveData lists
+                _waitingList.value = waitingList
+                _confirmedList.value = confirmedList
+            }
+
+            else -> {} // Handle other cases if needed
+        }
+    }
+
 
 }

@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import com.example.shopping.R
 import com.example.shopping.activities.helper.GlideImageLoader
 import com.example.shopping.activities.view.activities.MainActivity
+import com.example.shopping.activities.view.activities.OrderTrackingActivity
 import com.example.shopping.activities.view.auth.LoginActivity
 import com.example.shopping.activities.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +31,7 @@ class UserFragment : Fragment() {
     private lateinit var displayName: TextView
     private lateinit var avatar: CircleImageView
     private lateinit var glideImageLoader: GlideImageLoader
+    private lateinit var order: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +52,7 @@ class UserFragment : Fragment() {
         avatar = view.findViewById(R.id.avatar)
         logOutButton = view.findViewById(R.id.logOutButton)
         glideImageLoader = GlideImageLoader(context)
+        order = view.findViewById(R.id.order)
     }
 
     private fun initialListener() {
@@ -73,6 +76,21 @@ class UserFragment : Fragment() {
                 }
                 .setNegativeButton("No", null).show()
         }
+
+        order.setOnClickListener {
+            toOrderTrackingScreen()
+        }
+
+    }
+
+    private fun toOrderTrackingScreen() {
+        val intent = Intent(context, OrderTrackingActivity::class.java)
+        val options = ActivityOptions.makeCustomAnimation(
+            context,
+            R.anim.slide_in_right,
+            R.anim.slide_out_left,
+        )
+        this.startActivity(intent, options.toBundle())
     }
 
     private fun toLoginScreen() {

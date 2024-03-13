@@ -162,7 +162,6 @@ class HomeFragment : Fragment() {
                         progressBar.visibility = View.GONE
                     } else {
                         productList.addAll(products)
-                        Log.d("TAG", "initialListener: ${productList.get(0)}")
                         setupProductAdapter(productList)
                         progressBar.visibility = View.GONE
                     }

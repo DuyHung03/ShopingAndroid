@@ -64,4 +64,8 @@
     <string name="we_will_confirm_your_order_and_deliver_it_to_you_as_soon_as_possible">We will confirm your order and deliver it to you as soon as possible</string>
     <string name="your_order_id_is">Your order id is:</string>
     <string name="to_your_orders">To your orders</string>
+    <string name="wait_for_confirmation">Wait for confirmation</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="order_id">Order id:</string>
+    <string name="order_details">Order Details</string>
 </resources>

@@ -45,7 +45,8 @@ class AddNewAddressActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (intent != null) {
-            address = intent.getParcelableExtra<Address>("address") as Address
+            address = intent
+                .getParcelableExtra<Address>("address") as Address
             val nameEditable = Editable.Factory.getInstance().newEditable(address.name)
             val phoneEditable = Editable.Factory.getInstance().newEditable(address.phoneNumber)
             val houseEditable = Editable.Factory.getInstance().newEditable(address.houseAddress)
@@ -64,6 +65,9 @@ class AddNewAddressActivity : AppCompatActivity() {
         //get city/province
         cityViewModel.getCity()
 
+        binding.backButton.setOnClickListener {
+            this.finish()
+        }
 
         //assign to spinner city
         cityViewModel.cities.observe(this) { cities ->
