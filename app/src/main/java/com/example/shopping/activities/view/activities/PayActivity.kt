@@ -47,6 +47,8 @@ class PayActivity : AppCompatActivity() {
 
         addressDetails = findViewById(R.id.addressDetail)
 
+        address = Address()
+
         initializeListener()
 
     }
