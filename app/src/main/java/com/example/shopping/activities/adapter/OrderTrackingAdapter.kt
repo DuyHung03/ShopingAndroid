@@ -1,5 +1,6 @@
 package com.example.shopping.activities.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,14 +19,19 @@ class OrderTrackingAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val image = itemView.findViewById<RoundedImageView>(R.id.image)
         private val productName = itemView.findViewById<TextView>(R.id.productName)
-        val status = itemView.findViewById<TextView>(R.id.status)
+        val status = itemView.findViewById<TextView>(R.id.status)!!
         private val total = itemView.findViewById<TextView>(R.id.total)
         private val totalPrice = itemView.findViewById<TextView>(R.id.totalPrice)
         private val orderId = itemView.findViewById<TextView>(R.id.orderId)
+        private val reasonTv = itemView.findViewById<TextView>(R.id.reason)
+
+        @SuppressLint("SetTextI18n")
         fun bind(
             imageUrl: String,
             name: String,
             confirmed: Boolean,
+            cancelled: Boolean,
+            reason: String?,
             itemCount: String,
             price: String,
             id: String
@@ -35,14 +41,26 @@ class OrderTrackingAdapter(
             )
 
             productName.text = name
-            if (confirmed) {
+            if (confirmed && !cancelled) {
                 status.text = "Confirmed"
-            } else {
+            }
+
+            if (!confirmed && !cancelled) {
                 status.text = "Waiting for confirmed"
             }
+
+            if (cancelled) {
+                status.text = "Cancelled"
+            }
+
             total.text = "Total ($itemCount): "
             totalPrice.text = "$$price"
             orderId.text = id
+
+            reason?.let {
+                reasonTv.visibility = View.VISIBLE
+                reasonTv.text = reason
+            }
         }
 
     }
@@ -63,16 +81,24 @@ class OrderTrackingAdapter(
             order.productList[0].product.images[0],
             order.productList[0].product.title,
             order.confirmed,
+            order.cancelled,
+            order.reasonCancel,
             order.productList.size.toString(),
             order.cost.total.toString(),
             order.orderId
         )
 
-        if (order.confirmed) {
+        if (order.confirmed && !order.cancelled) {
             holder.status.setTextColor(
                 holder.itemView.context.getColor(R.color.green)
             )
-        } else {
+        }
+        if (!order.confirmed && !order.cancelled) {
+            holder.status.setTextColor(
+                holder.itemView.context.getColor(R.color.orange)
+            )
+        }
+        if (order.cancelled) {
             holder.status.setTextColor(
                 holder.itemView.context.getColor(R.color.red)
             )

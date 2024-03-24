@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.example.shopping.activities.view.fragment.CancelledFragment
 import com.example.shopping.activities.view.fragment.ConfirmedFragment
 import com.example.shopping.activities.view.fragment.WaitingOrderFragment
 
@@ -15,9 +16,10 @@ class OrderPagerAdapter(
     override fun getItem(position: Int): Fragment = when (position) {
         0 -> WaitingOrderFragment()
         1 -> ConfirmedFragment()
+        2 -> CancelledFragment()
         else -> WaitingOrderFragment()
     }
 
-    override fun getCount(): Int = 2
+    override fun getCount(): Int = 3
 
 }

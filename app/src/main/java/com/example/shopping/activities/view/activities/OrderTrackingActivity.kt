@@ -25,6 +25,7 @@ class OrderTrackingActivity : AppCompatActivity() {
 
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.wait_for_confirmation))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.confirmed))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.cancelled))
 
         val adapter = OrderPagerAdapter(this, supportFragmentManager)
 

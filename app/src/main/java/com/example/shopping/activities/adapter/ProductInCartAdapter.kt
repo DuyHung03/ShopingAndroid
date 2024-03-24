@@ -29,7 +29,7 @@ class ProductInCartAdapter(
         private val image: ImageView = itemView.findViewById(R.id.image)
         val name: TextView = itemView.findViewById(R.id.productName)
         val price: TextView = itemView.findViewById(R.id.price)
-        private val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
+        val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
         private val quantity: TextView = itemView.findViewById(R.id.quantity)
         private val increase: ImageView = itemView.findViewById(R.id.increaseButton)
         val decrease: ImageView = itemView.findViewById(R.id.decreaseButton)

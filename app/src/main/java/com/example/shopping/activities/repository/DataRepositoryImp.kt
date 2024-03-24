@@ -3,6 +3,7 @@ package com.example.shopping.activities.repository
 import android.annotation.SuppressLint
 import android.util.Log
 import com.example.shopping.activities.entities.Address
+import com.example.shopping.activities.entities.CancelOrder
 import com.example.shopping.activities.entities.Cart
 import com.example.shopping.activities.entities.CartItem
 import com.example.shopping.activities.entities.Order
@@ -278,6 +279,48 @@ class DataRepositoryImp @Inject constructor(
             Resources.Failure(Exception(e.message))
         } catch (e: Exception) {
             Resources.Failure(Exception(e.message))
+        }
+    }
+
+    override suspend fun cancelOrder(
+        order: Order,
+        userId: String,
+        reason: String
+    ): Resources<String> {
+        val cancelOrderDoc = db.collection("order").document(userId)
+        return try {
+            val snapshot = cancelOrderDoc.get().await()
+            if (snapshot.exists()) {
+                val existingItem = snapshot.toObject(OrderList::class.java)
+                existingItem?.let {
+                    existingItem.orderList[order.orderId]?.cancelled = true
+                    existingItem.orderList[order.orderId]?.reasonCancel = reason
+                    cancelOrderDoc.set(existingItem).await()
+                }
+            }
+            Resources.Success("Cancel order successfully")
+        } catch (e: FirebaseFirestoreException) {
+            Resources.Failure(Exception(e.message))
+        } catch (e: Exception) {
+            Resources.Failure(Exception(e.message))
+        }
+    }
+
+    override suspend fun deleteOrderInDatabase(cancelOrder: CancelOrder, userId: String) {
+        val orderDoc = db.collection("order").document(userId)
+        val snapshot = orderDoc.get().await()
+
+        if (snapshot.exists()) {
+            val orderData = snapshot.toObject(OrderList::class.java)
+            val existingItem = orderData?.orderList?.get(cancelOrder.order.orderId)
+
+            if (existingItem != null) {
+                val updateItem = hashMapOf<String, Any>(
+                    "orderList.${cancelOrder.order.orderId}" to FieldValue.delete()
+                )
+
+                orderDoc.update(updateItem).await()
+            }
         }
     }
 

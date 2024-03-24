@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_id"
-        android:textStyle="italic"
         android:textColor="@color/g_gray500"
+        android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/choose_delivery_address"
-        android:textStyle="italic"
         android:textColor="@color/g_gray500"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="@+id/textView11"
         app:layout_constraintStart_toEndOf="@+id/textView11"
         app:layout_constraintTop_toTopOf="@+id/textView11"
@@ -59,6 +59,7 @@
         android:layout_marginStart="12dp"
         android:text="@string/select_ward"
         android:textColor="@color/red"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="@+id/image" />
@@ -86,5 +87,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/total"
         app:layout_constraintStart_toEndOf="@+id/total"
         app:layout_constraintTop_toTopOf="@+id/total" />
+
+    <TextView
+        android:id="@+id/reason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        android:text="@string/choose_delivery_address"
+        android:textColor="@color/red"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

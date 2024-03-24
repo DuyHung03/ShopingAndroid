@@ -123,26 +123,43 @@ class DataViewModel @Inject constructor(
     private val _confirmedList = MutableLiveData<List<Order>>()
     val confirmedList: LiveData<List<Order>> = _confirmedList
 
+    private val _cancelledList = MutableLiveData<List<Order>>()
+    val cancelledList: LiveData<List<Order>> = _cancelledList
+
     fun getOrders(userId: String) = viewModelScope.launch {
         when (val res = dataRepository.getOrders(userId)) {
             is Resources.Success -> {
                 val waitingList = mutableListOf<Order>()
                 val confirmedList = mutableListOf<Order>()
+                val cancelledList = mutableListOf<Order>()
                 for (order in res.result.orderList.values) {
-                    if (order.confirmed) {
+                    if (order.confirmed && !order.cancelled) {
                         confirmedList.add(order)
-                    } else {
+                    }
+                    if (!order.confirmed && !order.cancelled) {
                         waitingList.add(order)
+                    }
+                    if (order.cancelled) {
+                        cancelledList.add(order)
                     }
                 }
                 // Update LiveData lists
                 _waitingList.value = waitingList
                 _confirmedList.value = confirmedList
+                _cancelledList.value = cancelledList
             }
 
             else -> {} // Handle other cases if needed
         }
     }
 
+    private val _cancelOrderFlow = MutableLiveData<Resources<String>>()
+    val cancelOrderFlow: LiveData<Resources<String>> = _cancelOrderFlow
+
+    fun cancelOrder(order: Order, userId: String, reason: String) = viewModelScope.launch {
+        _cancelOrderFlow.value = Resources.Loading
+        val res = dataRepository.cancelOrder(order, userId, reason)
+        _cancelOrderFlow.value = res
+    }
 
 }

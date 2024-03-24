@@ -47,8 +47,7 @@ class CartActivity : AppCompatActivity(), ProductInCartAdapter.OnItemClickListen
 
     private fun initializeListener() {
         currentUser = authViewModel.currentUser
-        if (currentUser != null)
-            dataViewModel.getProductsInCart(currentUser!!.uid)
+        if (currentUser != null) dataViewModel.getProductsInCart(currentUser!!.uid)
 
         binding.backButton.setOnClickListener {
             this.finish()
@@ -84,11 +83,8 @@ class CartActivity : AppCompatActivity(), ProductInCartAdapter.OnItemClickListen
         }
 
         binding.checkboxAll.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                checkAllProducts()
-            } else {
-                checkedList.clear()
-            }
+
+            toggleAllProducts(isChecked)
             val updatedTotalPrice =
                 calculateTotalPrice(checkedList) // Calculate total price efficiently
             binding.totalPrice.text =
@@ -116,11 +112,26 @@ class CartActivity : AppCompatActivity(), ProductInCartAdapter.OnItemClickListen
         this.startActivity(intent, options.toBundle())
     }
 
-    private fun checkAllProducts() {
+    private fun toggleAllProducts(checked: Boolean) {
         checkedList.clear()
-        checkedList.addAll(productList)
-    }
+        // Iterate through each item in the RecyclerView
+        for (i in 0 until binding.productRecyclerView.childCount) {
+            // Get the ViewHolder for the current item
+            val viewHolder = binding.productRecyclerView.getChildViewHolder(
+                binding.productRecyclerView.getChildAt(i)
+            ) as ProductInCartAdapter.ViewHolder
 
+            // Set the checkbox state based on the 'checked' parameter
+            viewHolder.checkBox.isChecked = checked
+
+            // Add or remove the product associated with the current item based on checkbox state
+            if (checked) {
+                checkedList.add(productList[viewHolder.bindingAdapterPosition])
+            } else {
+                checkedList.remove(productList[viewHolder.bindingAdapterPosition])
+            }
+        }
+    }
 
     private fun setupProductsAdapter() {
         productInCartAdapter = ProductInCartAdapter(this)

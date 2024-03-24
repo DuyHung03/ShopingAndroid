@@ -1,6 +1,7 @@
 package com.example.shopping.activities.repository
 
 import com.example.shopping.activities.entities.Address
+import com.example.shopping.activities.entities.CancelOrder
 import com.example.shopping.activities.entities.CartItem
 import com.example.shopping.activities.entities.Order
 import com.example.shopping.activities.entities.OrderList
@@ -23,7 +24,11 @@ interface DataRepository {
 
     suspend fun saveAddress(address: Address, userId: String): Resources<String>
 
-    suspend fun saveOrder(order: Order, userId: String):Resources<String>
-    suspend fun getOrders(userId: String) : Resources<OrderList>
+    suspend fun saveOrder(order: Order, userId: String): Resources<String>
+    suspend fun getOrders(userId: String): Resources<OrderList>
+
+    suspend fun cancelOrder(order: Order, userId: String, reason: String): Resources<String>
+
+    suspend fun deleteOrderInDatabase(cancelOrder: CancelOrder, userId: String)
 
 }

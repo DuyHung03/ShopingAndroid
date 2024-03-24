@@ -16,6 +16,7 @@
     <color name="g_red">#FF0000</color>
     <color name="g_gray500">#969899</color>
     <color name="red">#CF0606</color>
+    <color name="orange">#D16C13</color>
     <color name="primary">#000000</color>
     <color name="green">#08A830</color>
 </resources>

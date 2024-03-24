@@ -66,6 +66,14 @@
     <string name="to_your_orders">To your orders</string>
     <string name="wait_for_confirmation">Wait for confirmation</string>
     <string name="confirmed">Confirmed</string>
+    <string name="cancelled">Cancelled</string>
     <string name="order_id">Order id:</string>
     <string name="order_details">Order Details</string>
+    <string name="cancel_order">Cancel order</string>
+    <string name="choose_a_reason_for_cancellation">Choose a reason for cancellation:</string>
+    <string name="change_combine_order">Change/Combine order</string>
+    <string name="duplicate_order">Duplicate order</string>
+    <string name="change_of_mind">Change of mind</string>
+    <string name="decide_for_alternative_product">Decide for alternative product</string>
+    <string name="found_better_price_elsewhere">Found better price elsewhere</string>
 </resources>

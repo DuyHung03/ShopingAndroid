@@ -21,36 +21,36 @@ import com.example.shopping.activities.viewmodel.DataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class WaitingOrderFragment : Fragment() {
-
+class CancelledFragment : Fragment() {
     private val dataViewModel by viewModels<DataViewModel>()
-    private lateinit var progressBar: ProgressBar
     private val authViewModel by viewModels<AuthViewModel>()
     private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
     private lateinit var orderTrackingAdapter: OrderTrackingAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_waiting_order, container, false)
+        return inflater.inflate(R.layout.fragment_cancelled, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBar = view.findViewById(R.id.progressBar)
         recyclerView = view.findViewById(R.id.recyclerView)
+        progressBar = view.findViewById(R.id.progressBar)
         dataViewModel.getOrders(authViewModel.currentUser?.uid!!)
-        dataViewModel.waitingList.observe(viewLifecycleOwner) { waitingList ->
-            waitingList?.let {
-                setupRecyclerView(waitingList)
+        dataViewModel.cancelledList.observe(viewLifecycleOwner) { cancelList ->
+            progressBar.visibility = View.VISIBLE
+            cancelList?.let {
+                setupRecyclerView(cancelList)
+                progressBar.visibility = View.GONE
             }
         }
     }
 
-    private fun setupRecyclerView(waitingList: List<Order>) {
-        progressBar.visibility = View.VISIBLE
-        orderTrackingAdapter = OrderTrackingAdapter(waitingList) { order ->
+    private fun setupRecyclerView(cancelList: List<Order>) {
+        orderTrackingAdapter = OrderTrackingAdapter(cancelList) { order ->
             toOrderDetails(order)
         }
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -62,8 +62,6 @@ class WaitingOrderFragment : Fragment() {
             )
         )
         recyclerView.adapter = orderTrackingAdapter
-        progressBar.visibility = View.GONE
-
     }
 
     private fun toOrderDetails(order: Order) {

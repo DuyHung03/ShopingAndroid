@@ -31,8 +31,8 @@ class PayActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPayBinding
     private var checkedList: ArrayList<CartItem>? = null
     private val dataViewModel by viewModels<DataViewModel>()
-    private lateinit var addressDetails: TextView
     private val authViewModel by viewModels<AuthViewModel>()
+    private lateinit var addressDetails: TextView
     private lateinit var address: Address
     private lateinit var cost: Cost
     private lateinit var order: Order

@@ -78,7 +78,11 @@ class UserFragment : Fragment() {
         }
 
         order.setOnClickListener {
-            toOrderTrackingScreen()
+            if (viewModel.currentUser?.uid != null)
+                toOrderTrackingScreen()
+            else {
+                toLoginScreen()
+            }
         }
 
     }
