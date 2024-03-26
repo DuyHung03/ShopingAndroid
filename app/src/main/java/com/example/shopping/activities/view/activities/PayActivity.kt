@@ -98,7 +98,15 @@ class PayActivity : AppCompatActivity() {
 
         binding.payButton.setOnClickListener {
             order =
-                Order(UUID.randomUUID().toString(), address, checkedList!!, cost, Date(), false)
+                Order(
+                    UUID.randomUUID().toString(),
+                    authViewModel.currentUser?.uid!!,
+                    address,
+                    checkedList!!,
+                    cost,
+                    Date(),
+                    false
+                )
             dataViewModel.saveOrder(order, authViewModel.currentUser?.uid!!)
         }
 

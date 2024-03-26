@@ -14,6 +14,7 @@ data class OrderList(
 @Parcelize
 data class Order(
     val orderId: String,
+    val customerId: String,
     val address: Address,
     val productList: ArrayList<CartItem>,
     val cost: Cost,
@@ -22,5 +23,5 @@ data class Order(
     var cancelled: Boolean = false,
     var reasonCancel: String? = null
 ) : Parcelable {
-    constructor() : this("", Address(), ArrayList(), Cost(), Date(), false)
+    constructor() : this("", "", Address(), ArrayList(), Cost(), Date(), false)
 }
