@@ -54,7 +54,7 @@ class ProductInCartAdapter(
 
         fun bind(imageUrl: String, name: String, price: String, quantity: String) {
             GlideImageLoader(itemView.context).load(
-                imageUrl, image, R.drawable.spinner_loading, R.drawable.image_placeholder
+                imageUrl, image, R.drawable.image_placeholder, R.drawable.image_placeholder
             )
             this.name.text = name
             this.price.text = "$ $price"

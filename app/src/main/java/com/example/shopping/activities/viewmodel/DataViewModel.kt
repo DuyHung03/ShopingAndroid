@@ -1,15 +1,18 @@
 package com.example.shopping.activities.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopping.activities.entities.Address
 import com.example.shopping.activities.entities.CartItem
+import com.example.shopping.activities.entities.Message
 import com.example.shopping.activities.entities.Order
 import com.example.shopping.activities.entities.User
 import com.example.shopping.activities.repository.DataRepository
 import com.example.shopping.activities.utils.Resources
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -160,6 +163,28 @@ class DataViewModel @Inject constructor(
         _cancelOrderFlow.value = Resources.Loading
         val res = dataRepository.cancelOrder(order, userId, reason)
         _cancelOrderFlow.value = res
+    }
+    fun sentMessage(message: Message, conversationId: String) = viewModelScope.launch {
+        try {
+            dataRepository.sendMessage(message, conversationId)
+        } catch (e: Exception) {
+            Log.e("TAG", "Error sending message and refreshing messages: ${e.message}")
+        }
+    }
+
+    private val _messagesLiveData = MutableLiveData<List<Message>>()
+    val messagesLiveData: LiveData<List<Message>> = _messagesLiveData
+    fun getMessageByUser(userId: String) {
+        try {
+            dataRepository.getMessage(userId, _messagesLiveData)
+        } catch (e: Exception) {
+            Log.d("TAG", "getChatUserList: $e")
+        }
+    }
+
+    fun getMessageFromLocal(senderId: String) = viewModelScope.launch {
+        val res = dataRepository.getMessageFromLocal(senderId)
+        _messagesLiveData.value = res
     }
 
 }

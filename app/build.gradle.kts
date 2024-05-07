@@ -57,6 +57,8 @@ dependencies {
     implementation("net.sourceforge.jtds:jtds:1.3.1")
     implementation("com.google.firebase:firebase-firestore:24.10.0")
     implementation("com.google.firebase:firebase-analytics:21.5.0")
+    implementation("com.google.firebase:firebase-database:20.3.1")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     testImplementation("junit:junit:4.13.2")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -127,4 +129,12 @@ dependencies {
 
     //spinner
     implementation("com.jaredrummler:material-spinner:1.3.1")
+
+    //room
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    //zoom image
+    implementation ("com.github.MikeOrtiz:TouchImageView:3.6")
 }

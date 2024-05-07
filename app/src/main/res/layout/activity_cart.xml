@@ -54,7 +54,7 @@
                     android:layout_height="60dp">
 
                     <ImageView
-                        android:id="@+id/cart"
+                        android:id="@+id/chat"
                         android:layout_width="60dp"
                         android:layout_height="66dp"
                         android:contentDescription="@string/cart"

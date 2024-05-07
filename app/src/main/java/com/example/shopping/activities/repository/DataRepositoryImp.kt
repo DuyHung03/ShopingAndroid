@@ -1,25 +1,42 @@
 package com.example.shopping.activities.repository
 
 import android.annotation.SuppressLint
+import android.database.sqlite.SQLiteConstraintException
+import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.example.shopping.activities.entities.Address
 import com.example.shopping.activities.entities.CancelOrder
 import com.example.shopping.activities.entities.Cart
 import com.example.shopping.activities.entities.CartItem
+import com.example.shopping.activities.entities.Message
 import com.example.shopping.activities.entities.Order
 import com.example.shopping.activities.entities.OrderList
 import com.example.shopping.activities.entities.User
+import com.example.shopping.activities.roomDB.AppDatabase
 import com.example.shopping.activities.utils.Resources
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.util.UUID
 import javax.inject.Inject
 
 @SuppressLint("LogNotTimber")
 class DataRepositoryImp @Inject constructor(
-    private val db: FirebaseFirestore, private val authRepository: AuthRepository
+    private val db: FirebaseFirestore,
+    private val authRepository: AuthRepository,
+    private val realtimeDatabase: FirebaseDatabase,
+    private val appDatabase: AppDatabase,
+    private val storage: FirebaseStorage
 ) : DataRepository {
     private val cartDocument = db.collection("cart")
 
@@ -283,9 +300,7 @@ class DataRepositoryImp @Inject constructor(
     }
 
     override suspend fun cancelOrder(
-        order: Order,
-        userId: String,
-        reason: String
+        order: Order, userId: String, reason: String
     ): Resources<String> {
         val cancelOrderDoc = db.collection("order").document(userId)
         return try {
@@ -321,6 +336,105 @@ class DataRepositoryImp @Inject constructor(
 
                 orderDoc.update(updateItem).await()
             }
+        }
+    }
+
+    override suspend fun sendMessage(message: Message, conversationId: String) {
+        // Use withContext to switch to a background thread (Dispatchers.IO)
+        withContext(Dispatchers.IO) {
+            try {
+                if (!message.imageUrl.isNullOrEmpty() && message.message.isNullOrEmpty()) {
+                    // Upload image and get image URL
+                    val imageUrl = uploadImage(Uri.parse(message.imageUrl))
+                    // Set the image URL in the message
+                    message.imageUrl = imageUrl.toString()
+                }
+
+                val conversationRef = realtimeDatabase.getReference("messages/$conversationId/")
+
+                //add message id (auto generate by firebase)
+                val messageId =
+                    conversationRef.push().key ?: throw Exception("Failed to generate message ID")
+
+                //set message details
+                val messageData = mapOf(
+                    "id" to message.id,
+                    "senderId" to message.senderId,
+                    "senderEmail" to message.senderEmail,
+                    "senderName" to message.senderName,
+                    "senderPhoto" to message.senderPhoto,
+                    "recipient" to message.recipient,
+                    "message" to message.message,
+                    "imageUrl" to message.imageUrl,
+                    "timestamp" to message.timestamp
+                )
+
+                // add new message
+                conversationRef.child(messageId).setValue(messageData).await()
+                updateLastMessageInUser(message)
+            } catch (e: Exception) {
+                throw Exception("Error sending message: ${e.message}")
+            }
+        }
+    }
+
+    override fun getMessage(userId: String, liveData: MutableLiveData<List<Message>>) {
+        val messageRef = realtimeDatabase.getReference("messages/$userId")
+        messageRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val messages: List<Message> = snapshot.children.map {
+                    it.getValue(Message::class.java)!!.copy(id = snapshot.key!!)
+                }
+                liveData.postValue(messages)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "onCancelled: $error")
+            }
+
+        })
+    }
+
+    override suspend fun saveMessageToLocal(message: Message) {
+        try {
+            appDatabase.messageDao().insertMessage(message)
+        } catch (e: SQLiteConstraintException) {
+            Log.e("DataRepositoryImp", "Error inserting message: ${e.message}")
+        }
+    }
+
+    override suspend fun getMessageFromLocal(senderId: String): List<Message> {
+        return appDatabase.messageDao().getAllMessages(senderId)
+    }
+
+    override suspend fun uploadImage(uri: Uri): Uri {
+        val storageRef = storage.reference
+        val imagesRef = storageRef.child("chatImages/${UUID.randomUUID()}")
+        imagesRef.putFile(uri).await()
+
+        return imagesRef.downloadUrl.await()
+    }
+
+    private suspend fun updateLastMessageInUser(message: Message) {
+        try {
+            withContext(Dispatchers.IO) {
+                val chatUserRef = realtimeDatabase.getReference("chatUser/${message.senderId}")
+                chatUserRef.updateChildren(
+                    mapOf(
+                        "id" to message.id,
+                        "senderId" to message.senderId,
+                        "senderEmail" to message.senderEmail,
+                        "senderName" to message.senderName,
+                        "senderPhoto" to message.senderPhoto,
+                        "recipient" to message.recipient,
+                        "message" to message.message,
+                        "imageUrl" to message.imageUrl,
+                        "timestamp" to message.timestamp
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("DataRepositoryImp", "Error updating last message: ${e.message}")
         }
     }
 

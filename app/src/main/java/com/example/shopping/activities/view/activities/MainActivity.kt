@@ -69,5 +69,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        bottomNavigationView.getOrCreateBadge(R.id.userFragment).number = 2
+
     }
 }

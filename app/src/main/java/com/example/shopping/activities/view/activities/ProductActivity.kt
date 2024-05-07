@@ -164,7 +164,7 @@ class ProductActivity : AppCompatActivity() {
             glideImageLoader.load(
                 product?.images?.get(0),
                 image!!,
-                R.drawable.spinner_loading,
+                R.drawable.image_placeholder,
                 R.drawable.image_placeholder
             )
             //set price

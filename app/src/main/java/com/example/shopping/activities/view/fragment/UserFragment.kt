@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.shopping.R
 import com.example.shopping.activities.helper.GlideImageLoader
+import com.example.shopping.activities.view.activities.ChatActivity
 import com.example.shopping.activities.view.activities.MainActivity
 import com.example.shopping.activities.view.activities.OrderTrackingActivity
 import com.example.shopping.activities.view.auth.LoginActivity
@@ -32,6 +33,7 @@ class UserFragment : Fragment() {
     private lateinit var avatar: CircleImageView
     private lateinit var glideImageLoader: GlideImageLoader
     private lateinit var order: LinearLayout
+    private lateinit var chatButton: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +55,7 @@ class UserFragment : Fragment() {
         logOutButton = view.findViewById(R.id.logOutButton)
         glideImageLoader = GlideImageLoader(context)
         order = view.findViewById(R.id.order)
+        chatButton = view.findViewById(R.id.chat)
     }
 
     private fun initialListener() {
@@ -85,6 +88,23 @@ class UserFragment : Fragment() {
             }
         }
 
+        chatButton.setOnClickListener {
+            if (viewModel.currentUser?.uid != null)
+                toChatScreen()
+            else {
+                toLoginScreen()
+            }
+        }
+
+    }
+
+    private fun toChatScreen() {
+        val intent = Intent(context, ChatActivity::class.java)
+        startActivity(
+            intent,
+            ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_right, R.anim.fade_out)
+                .toBundle()
+        )
     }
 
     private fun toOrderTrackingScreen() {
